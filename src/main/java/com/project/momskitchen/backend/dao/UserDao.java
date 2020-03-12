@@ -1,5 +1,6 @@
 package com.project.momskitchen.backend.dao;
 
+import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
 import com.project.momskitchen.backend.model.User;
 
 public interface UserDao{

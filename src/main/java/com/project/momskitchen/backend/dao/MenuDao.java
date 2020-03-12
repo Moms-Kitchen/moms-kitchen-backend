@@ -1,6 +1,7 @@
 package com.project.momskitchen.backend.dao;
 
 import com.project.momskitchen.backend.model.Menu;
+import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
 import com.project.momskitchen.backend.model.Meal;
 
 public interface MenuDao{
