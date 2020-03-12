@@ -1,4 +1,4 @@
-package com.proyect.momskitchen.backend.model;
+package com.project.momskitchen.backend.model;
 
 public class Meal{
     String name;

@@ -1,4 +1,4 @@
-package com.proyect.momskitchen.backend;
+package com.project.momskitchen.backend.main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
