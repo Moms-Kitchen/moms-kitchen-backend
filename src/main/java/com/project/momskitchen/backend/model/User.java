@@ -1,4 +1,4 @@
-package com.proyect.momskitchen.backend.model;
+package com.project.momskitchen.backend.model;
 
 public class User{
 
@@ -8,9 +8,9 @@ public class User{
     String email;
     int phone;
     float rating;
-    //CreditCard card;
     String profilePicture;
-
+    //CreditCard card; /-- for future use
+    
     public int getId() {
         return id;
     }
