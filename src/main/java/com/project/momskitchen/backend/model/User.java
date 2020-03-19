@@ -9,6 +9,7 @@ public class User{
     int phone;
     float rating;
     String profilePicture;
+    private String contra;
     //CreditCard card; /-- for future use
     
     public int getId() {
@@ -65,6 +66,14 @@ public class User{
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getContra() {
+        return contra;
+    }
+
+    public void setContra(String contra) {
+        this.contra = contra;
     }
 
     

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.project.momskitchen.backend.services.Services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,9 @@ public class UserServices implements Services {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Autowired
+    private 
 
     
 }
