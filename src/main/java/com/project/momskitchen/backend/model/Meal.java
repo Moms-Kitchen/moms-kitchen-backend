@@ -1,9 +1,11 @@
 package com.project.momskitchen.backend.model;
 
+import java.math.BigDecimal;
+
 public class Meal{
     String name;
     String description;
-    float price;
+    BigDecimal price;
 
     public String getName() {
         return name;
@@ -21,11 +23,11 @@ public class Meal{
         this.description = description;
     }
 
-    public float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
     
