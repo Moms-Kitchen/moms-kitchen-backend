@@ -13,6 +13,8 @@ public class User{
     float rating;
     String profilePicture;
     private String password;
+    int role;
+
     //CreditCard card; /-- for future use
     
     public User(){
@@ -29,6 +31,19 @@ public class User{
         this.rating = rating;
         this.profilePicture = profilePicture;
         this.password = password;
+    }
+
+    public User(String name,String address, String email, float phone, Boolean chef, float rating, String profilePicture, String password, int role){
+        this.id = 0;
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.chef = chef;
+        this.rating = rating;
+        this.profilePicture = profilePicture;
+        this.password = password;
+        this.role = role;
     }
 
     //User Constructor to deliver worthless information package, used for login confirmation in the front end.
@@ -114,6 +129,18 @@ public class User{
 
     public void setChef(boolean chef) {
         this.chef = chef;
-    }   
+    }
+
+    public void setPhone(float phone) {
+        this.phone = phone;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
 
 }
