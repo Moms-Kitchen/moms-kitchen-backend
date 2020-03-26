@@ -5,7 +5,9 @@ import com.project.momskitchen.backend.model.User;
 
 public interface UserDao{
     
-    public User consultUser(int id)throws MomsPersistenceException;
+    public User readUser(int id)throws MomsPersistenceException;
+
+    public User readUser(String email, String password);
     
     void insertarUsuario(int cedula, String nombre, String apellido, String correo,String contra);
 

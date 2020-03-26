@@ -2,7 +2,7 @@ package com.project.momskitchen.backend.model;
 
 import java.util.List;
 
-public class Cook extends User {
+public class Cook extends User {    
 
     List<Meal> menus;
     List<String> specialties;

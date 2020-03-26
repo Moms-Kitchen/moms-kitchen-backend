@@ -1,17 +1,49 @@
 package com.project.momskitchen.backend.model;
 
+import java.lang.reflect.Constructor;
+
 public class User{
 
     int id;
     String name;
     String address;
     String email;
-    int phone;
+    float phone;
+    boolean chef;
     float rating;
     String profilePicture;
-    private String contra;
+    private String password;
     //CreditCard card; /-- for future use
     
+    public User(){
+        
+    }
+
+    public User(String name,String address, String email, float phone, Boolean chef, float rating, String profilePicture, String password){
+        this.id = 0;
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.chef = chef;
+        this.rating = rating;
+        this.profilePicture = profilePicture;
+        this.password = password;
+    }
+
+    //User Constructor to deliver worthless information package, used for login confirmation in the front end.
+    public User(String email){
+        this.id = 0;
+        this.name = null;
+        this.address = null;
+        this.email = email;
+        this.phone = 0;
+        this.chef = false;
+        this.rating = 0;
+        this.profilePicture = null;
+        this.password = null;
+    }
+
     public int getId() {
         return id;
     }
@@ -44,7 +76,7 @@ public class User{
         this.email = email;
     }
 
-    public int getPhone() {
+    public float getPhone() {
         return phone;
     }
 
@@ -68,14 +100,20 @@ public class User{
         this.profilePicture = profilePicture;
     }
 
-    public String getContra() {
-        return contra;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContra(String contra) {
-        this.contra = contra;
+    public void setPassword(String contra) {
+        this.password = contra;
     }
 
-    
+    public boolean isChef() {
+        return chef;
+    }
+
+    public void setChef(boolean chef) {
+        this.chef = chef;
+    }   
 
 }
