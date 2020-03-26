@@ -6,9 +6,20 @@ import java.util.List;
 
 public class Order {
 
+    int id;
     BigDecimal totalPrice;
-    List<Meal> orders;
+    List<Menu> orders;
     Date orderDate;
+    String description;
+    int idCustomer;
+
+    public Order(int id, List<Menu> orders, Date orderDate, String description, int idCustomer) {
+        this.id = id;
+        this.orders = orders;
+        this.orderDate = orderDate;
+        this.description = description;
+        this.idCustomer = idCustomer;
+    }
 
     public BigDecimal getTotalPrice() {
         return totalPrice;
@@ -18,11 +29,11 @@ public class Order {
         this.totalPrice = totalPrices;
     }
 
-    public List<Meal> getOrders() {
+    public List<Menu> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Meal> lorders) {
+    public void setOrders(List<Menu> lorders) {
         orders = lorders;
     }
 
@@ -33,6 +44,32 @@ public class Order {
     public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getIdCustomer() {
+        return idCustomer;
+    }
+
+    public void setIdCustomer(int idCustomer) {
+        this.idCustomer = idCustomer;
+    }
+
+    
          
     
 }
