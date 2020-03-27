@@ -2,6 +2,7 @@ package com.project.momskitchen.backend.persistence.impl;
 
 import java.sql.*;
 import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
+import com.project.momskitchen.backend.model.Menu;
 import com.project.momskitchen.backend.model.User;
 
 import java.util.logging.Level;
@@ -82,5 +83,27 @@ public class MomsKitchenDB {
             e.printStackTrace();
         }
         return user;
+    }
+
+    public Menu getMenu(int idMenu) throws MomsPersistenceException{
+        String SQL = "SELECT * FROM public.\"Menu\" WHERE id = ? ";
+        Menu mn = null;
+        try {
+            realizaConexion();
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setString(1, Integer.toString(idMenu));
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            if(rs.absolute(1)){
+                mn = new Menu(rs.getInt("id"),rs.getInt("idUser"),rs.getBigDecimal("price"));
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return mn;
     }
 }

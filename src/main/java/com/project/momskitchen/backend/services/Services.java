@@ -2,6 +2,8 @@ package com.project.momskitchen.backend.services;
 
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Service;
+
 public interface Services {
 
 
