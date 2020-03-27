@@ -11,7 +11,7 @@ public class User{
     float phone;
     boolean chef;
     float rating;
-    String profilePicture;
+    byte profilePicture;
     private String password;
     int role;
 
@@ -21,7 +21,7 @@ public class User{
         
     }
 
-    public User(String name,String address, String email, float phone, Boolean chef, float rating, String profilePicture, String password){
+    public User(String name,String address, String email, float phone, Boolean chef, float rating, byte profilePicture, String password){
         this.id = 0;
         this.name = name;
         this.address = address;
@@ -33,7 +33,7 @@ public class User{
         this.password = password;
     }
 
-    public User(String name,String address, String email, float phone, Boolean chef, float rating, String profilePicture, String password, int role){
+    public User(String name,String address, String email, float phone, Boolean chef, float rating, byte profilePicture, String password, int role){
         this.id = 0;
         this.name = name;
         this.address = address;
@@ -55,7 +55,7 @@ public class User{
         this.phone = 0;
         this.chef = false;
         this.rating = 0;
-        this.profilePicture = null;
+        this.profilePicture = 0x0;
         this.password = null;
     }
 
@@ -107,11 +107,11 @@ public class User{
         this.rating = rating;
     }
 
-    public String getProfilePicture() {
+    public byte getProfilePicture() {
         return profilePicture;
     }
 
-    public void setProfilePicture(String profilePicture) {
+    public void setProfilePicture(byte profilePicture) {
         this.profilePicture = profilePicture;
     }
 
