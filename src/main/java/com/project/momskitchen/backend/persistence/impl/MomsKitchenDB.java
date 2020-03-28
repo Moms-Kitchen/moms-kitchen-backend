@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 
 public class MomsKitchenDB {
     //Direccion del DB de prueba
-    private String urlDatabase = "jdbc:postgresql://ec2-18-235-97-230.compute-1.amazonaws.com:5432/ddvfsnqk7kk6js";
-    private String usuarioDb = "oycgpdvztbtyoa";
-    private String passwordDb= "25c4d0178fb109728f5540590430e746a642501060bd0cd83ae212e4d436e1c5";
+    private String urlDatabase = "jdbc:postgresql://ec2-54-165-36-134.compute-1.amazonaws.com:5432/d3ckljhjikb54l";
+    private String usuarioDb = "khmwcxngcevhfl";
+    private String passwordDb= "00d145a9ac598e7f244c56b463bbe44d5a4bdc9820f5de415a04bd65745dfa02";
     static Connection c = null;
 
     public static void main(String[] args) throws MomsPersistenceException {
