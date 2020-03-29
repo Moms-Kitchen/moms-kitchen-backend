@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.project.momskitchen.backend.model.User;
 import com.project.momskitchen.backend.services.impl.UserServices;
@@ -15,6 +16,7 @@ public class UserController {
 
     UserServices usi = new UserServices();
 
+    @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.GET, path = "{email}/{password}")
     public ResponseEntity<?> verifyLogin(@PathVariable("email") String email,
             @PathVariable("password") String password) {
