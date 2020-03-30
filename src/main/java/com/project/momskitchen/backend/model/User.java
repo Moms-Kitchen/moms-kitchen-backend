@@ -9,7 +9,7 @@ public class User{
     String address;
     String email;
     float phone;
-    boolean chef;
+    boolean ischef;
     float rating;
     byte profilePicture;
     private String password;
@@ -18,7 +18,15 @@ public class User{
     //CreditCard card; /-- for future use
     
     public User(){
-        
+        this.id = 0;
+        this.name = null;
+        this.address = null;
+        this.email = null;
+        this.phone = 0;
+        this.ischef = false;
+        this.rating = 0;
+        this.profilePicture = 0x0;
+        this.password = null;
     }
 
     public User(String name,String address, String email, float phone, Boolean chef, float rating, byte profilePicture, String password){
@@ -27,7 +35,7 @@ public class User{
         this.address = address;
         this.email = email;
         this.phone = phone;
-        this.chef = chef;
+        this.ischef = chef;
         this.rating = rating;
         this.profilePicture = profilePicture;
         this.password = password;
@@ -39,21 +47,21 @@ public class User{
         this.address = address;
         this.email = email;
         this.phone = phone;
-        this.chef = chef;
+        this.ischef = chef;
         this.rating = rating;
         this.profilePicture = profilePicture;
         this.password = password;
         this.role = role;
     }
 
-    //User Constructor to deliver worthless information package, used for login confirmation in the front end.
-    public User(String email){
+    //User Constructor to deliver a login information package, used for login confirmation in the front end.
+    public User(String email, boolean ischef){
         this.id = 0;
         this.name = null;
         this.address = null;
         this.email = email;
         this.phone = 0;
-        this.chef = false;
+        this.ischef = ischef;
         this.rating = 0;
         this.profilePicture = 0x0;
         this.password = null;
@@ -124,11 +132,11 @@ public class User{
     }
 
     public boolean isChef() {
-        return chef;
+        return ischef;
     }
 
-    public void setChef(boolean chef) {
-        this.chef = chef;
+    public void setChef(boolean ischef) {
+        this.ischef = ischef;
     }
 
     public void setPhone(float phone) {

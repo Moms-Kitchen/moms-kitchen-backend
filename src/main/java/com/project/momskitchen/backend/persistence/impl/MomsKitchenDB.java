@@ -62,9 +62,9 @@ public class MomsKitchenDB {
     }
 
     public User authentication(String email, String password) throws MomsPersistenceException {
-        String SQL = "SELECT email FROM public.\"user\" WHERE email = ? AND password = ?";
+        String SQL = "SELECT email, chef FROM public.\"user\" WHERE email = ? AND password = ?";
 
-        User user = null;
+        User user = new User();
         try {
             realizaConexion();
             PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
@@ -73,8 +73,7 @@ public class MomsKitchenDB {
             ResultSet rs = pstmt.executeQuery();
             rs.next();
             if(rs.absolute(1)){
-                user = new User(rs.getString("email"));
-                System.out.println("User: " + user.toString());
+                user = new User(rs.getString("email"),rs.getBoolean("chef"));
                 c.close();
                 pstmt.close();
                 rs.close();
