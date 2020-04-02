@@ -24,6 +24,20 @@ public class UserController {
     {
         User user = usi.authenticateUser(email, password);
         return new ResponseEntity<>(user,HttpStatus.ACCEPTED);
-    } 
+    }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{email}")
+    public ResponseEntity<?> getUser(@PathVariable String email){
+                System.out.println("API");
+        try {
+            System.out.println("API TRY");
+            User user = usi.validateAuth(email);
+            return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
+            System.out.println("API CATCH");
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+        }
+    }
 }

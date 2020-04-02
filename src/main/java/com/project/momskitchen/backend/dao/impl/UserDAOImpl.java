@@ -26,6 +26,16 @@ public class UserDAOImpl implements UserDao {
         }
     }
 
+    public User readUser(String email) {
+        
+        try {
+            return bg.validateAuth(email);
+        } catch (MomsPersistenceException e) {            
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @Override
     public void insertarUsuario(int cedula, String nombre, String apellido, String correo, String contra) {
         // TODO Auto-generated method stub

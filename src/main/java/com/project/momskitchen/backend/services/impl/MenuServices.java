@@ -1,6 +1,7 @@
 package com.project.momskitchen.backend.services.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.project.momskitchen.backend.dao.impl.MenuDAOimpl;
 import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
@@ -21,6 +22,11 @@ public class MenuServices implements Services {
     public Menu getMenu(int idMenu) throws MomsPersistenceException{
         Menu menu = md.consultMenu(idMenu);
         return menu;
+    }
+
+    public List<Menu> getChefMenus(int idChef) throws MomsPersistenceException{
+        List<Menu> menus = md.consultChefMenus(idChef);
+        return menus;
     }
 
     @Override

@@ -18,6 +18,10 @@ public class UserServices implements Services {
         return udi.readUser(email, password);
     }
 
+    public User validateAuth(String email){         
+        return udi.readUser(email);
+    }
+
     @Override
     public void createElement(Object elemento) {
         // TODO Auto-generated method stub
