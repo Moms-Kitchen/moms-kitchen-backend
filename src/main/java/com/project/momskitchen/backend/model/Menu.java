@@ -6,13 +6,13 @@ import java.util.List;
 public class Menu {
      
     int id;
-    int idUser;
+    User chef;
     List<Meal> meals;
     BigDecimal price;
 
-    public Menu(int id, int idUser, BigDecimal price) {
+    public Menu(int id, User chef, BigDecimal price) {
         this.id = id;
-        this.idUser = idUser;
+        this.chef = chef;
         this.price = price;
     }
 
@@ -32,12 +32,12 @@ public class Menu {
         this.id = id;
     }
 
-    public int getIdUser() {
-        return idUser;
+    public User getChef() {
+        return chef;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
+    public void setChef(User chef) {
+        this.chef = chef;
     }
 
     public BigDecimal getPrice() {
@@ -50,7 +50,7 @@ public class Menu {
 
     @Override
     public String toString() {
-        return "Menu [id=" + id + ", idUser=" + idUser + ", meals=" + meals + ", price=" + price + "]";
+        return "Menu [chef=" + chef + ", id=" + id + ", meals=" + meals + ", price=" + price + "]";
     }
-    
+
 }

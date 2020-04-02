@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,20 +37,17 @@ public class MenuController{
         }
     }
 
-    /**@CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(method = RequestMethod.GET, path = "/{idCocinero}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.GET, path = "/chef/{idCocinero}")
     public ResponseEntity<?> getMenusCocinero(@PathVariable int idCocinero){
-                System.out.println("API");
         try {
-            System.out.println("API TRY");
-            Menu mn = ms.getMenu(idCocinero);
-            return new ResponseEntity<>(mn, HttpStatus.ACCEPTED);
+            List<Menu> mns = ms.getChefMenus(idCocinero);
+            return new ResponseEntity<>(mns, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
-            System.out.println("API CATCH");
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
         }
-    }**/
+    }
 
 }
 

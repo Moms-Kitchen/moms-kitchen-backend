@@ -61,7 +61,7 @@ public class User{
         this.name = null;
         this.address = null;
         this.email = email;
-        this.phone = 0;
+        this.phone = new BigDecimal(0);
         this.ischef = ischef;
         this.rating = 0;
         this.profilePicture = 0x0;

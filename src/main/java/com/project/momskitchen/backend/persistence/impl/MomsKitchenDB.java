@@ -70,14 +70,16 @@ public class MomsKitchenDB {
 
         User user = new User();
         try {
-            realizaConexion();
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
             PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             pstmt.setString(1, email);
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             rs.next();
             if(rs.absolute(1)){
-                user = new User(rs.getString("email"),rs.getBoolean("chef"));
+                user = new User(rs.getInt("id"),rs.getString("email"),rs.getBoolean("chef"));
                 c.close();
                 pstmt.close();
                 rs.close();
@@ -91,16 +93,20 @@ public class MomsKitchenDB {
     public Menu getMenu(int idMenu) throws MomsPersistenceException{
         String SQL = "SELECT * FROM public.\"menu\" WHERE id = ? ";
         Menu mn = null;
+        User chef = null;
         List<Meal> meals = new ArrayList<Meal>();
         try {
-            realizaConexion();
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
             PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idMenu);
             ResultSet rs = pstmt.executeQuery();
             int idMeal;
             rs.next();
             if(rs.absolute(1)){
-                mn = new Menu(rs.getInt("id"),rs.getInt("idUser"),rs.getBigDecimal("prices"));
+                chef = getUser(rs.getInt("idUser"));
+                mn = new Menu(rs.getInt("id"),chef,rs.getBigDecimal("prices"));
                 idMeal = rs.getInt("idMeal");
                 meals.add(getMeal(idMeal));
                 while(rs.next()){
@@ -118,12 +124,49 @@ public class MomsKitchenDB {
         return mn;
     }
 
+    public List<Menu> getUserMenu(int idUser) throws MomsPersistenceException{
+        String SQL = "SELECT * FROM public.\"menu\" WHERE \"idUser\" = ? ";
+        List<Menu> mns = new ArrayList<Menu>();
+        int idMenuCreate;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setInt(1, idUser);
+            ResultSet rs = pstmt.executeQuery();
+            int idMenu;
+            rs.next();
+            if(rs.absolute(1)){
+                mns = new ArrayList<Menu>();
+                idMenu = rs.getInt("id");
+                mns.add(getMenu(idMenu));
+                idMenuCreate = idMenu;
+                while(rs.next()){
+                    idMenu = rs.getInt("id");
+                    if(idMenu != idMenuCreate){
+                        mns.add(getMenu(idMenu));
+                        idMenuCreate = idMenu;
+                    }
+                }
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mns;
+    }
+
     public Meal getMeal(int idMeal) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"meal\" WHERE id = ? ";
 
         Meal meal = null;
         try {
-            realizaConexion();
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
             PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idMeal);
             ResultSet rs = pstmt.executeQuery();
@@ -147,7 +190,9 @@ public class MomsKitchenDB {
         User chef = null;
         List<Menu> menus = new ArrayList<Menu>();
         try {
-            realizaConexion();
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
             PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idOrder);
             ResultSet rs = pstmt.executeQuery();
@@ -155,9 +200,7 @@ public class MomsKitchenDB {
             rs.next();
             if(rs.absolute(1)){
                 customer = getUser(rs.getInt("idCustomer"));
-                System.out.println(customer.toString());
                 chef = getUser(rs.getInt("idChef"));
-                System.out.println(chef.toString());
                 od = new Order(rs.getInt("id"),rs.getDate("date"),rs.getString("description"),customer,chef);
                 idMenu = rs.getInt("idMenu");
                 menus.add(getMenu(idMenu));
@@ -181,9 +224,35 @@ public class MomsKitchenDB {
 
         User user = null;
         try {
-            realizaConexion();
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
             PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idUser);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            if(rs.absolute(1)){
+                user = new User(rs.getInt("id"), rs.getString("name"),rs.getString("address"),rs.getString("email"),rs.getBigDecimal("phone"),rs.getBoolean("chef"),rs.getFloat("rating"),rs.getByte("profilePicture"),rs.getString("password"),rs.getInt("idrole"));
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public User validateAuth(String email) throws MomsPersistenceException {
+        String SQL = "SELECT * FROM public.\"user\" WHERE email = ? ";
+
+        User user = null;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setString(1, email);
             ResultSet rs = pstmt.executeQuery();
             rs.next();
             if(rs.absolute(1)){
