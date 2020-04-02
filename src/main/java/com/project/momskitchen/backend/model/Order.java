@@ -8,14 +8,14 @@ public class Order {
 
     int id;
     BigDecimal totalPrice;
-    List<Menu> orders;
+    List<Menu> menus;
     Date orderDate;
     String description;
     int idCustomer;
+    int idChef;
 
-    public Order(int id, List<Menu> orders, Date orderDate, String description, int idCustomer) {
+    public Order(int id, Date orderDate, String description, int idCustomer) {
         this.id = id;
-        this.orders = orders;
         this.orderDate = orderDate;
         this.description = description;
         this.idCustomer = idCustomer;
@@ -29,12 +29,20 @@ public class Order {
         this.totalPrice = totalPrices;
     }
 
-    public List<Menu> getOrders() {
-        return orders;
+    public List<Menu> getMenus() {
+        return menus;
     }
 
-    public void setOrders(List<Menu> lorders) {
-        orders = lorders;
+    public void setMenus(List<Menu> menus) {
+        this.menus = menus;
+    }
+
+    public int getIdChef() {
+        return idChef;
+    }
+
+    public void setIdChef(int idChef) {
+        this.idChef = idChef;
     }
 
     public Date getOrderDate() {
@@ -69,7 +77,11 @@ public class Order {
         this.idCustomer = idCustomer;
     }
 
-    
-         
-    
+    @Override
+    public String toString() {
+        return "Order [description=" + description + ", id=" + id + ", idCustomer=" + idCustomer + ", menus=" + menus
+                + ", orderDate=" + orderDate + ", totalPrice=" + totalPrice + "]";
+    }
+
+      
 }
