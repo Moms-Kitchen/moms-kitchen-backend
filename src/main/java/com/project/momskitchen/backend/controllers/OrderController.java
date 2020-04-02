@@ -1,5 +1,6 @@
 package com.project.momskitchen.backend.controllers;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +31,18 @@ public class OrderController{
             return new ResponseEntity<>(or, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             System.out.println("API CATCH");
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.GET, path = "/customer/{idCustomer}")
+    public ResponseEntity<?> getOrdersCustomer(@PathVariable int idCustomer){
+        try {
+            List<Order> ods = os.getCustomerOrders(idCustomer);
+            return new ResponseEntity<>(ods, HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
         }

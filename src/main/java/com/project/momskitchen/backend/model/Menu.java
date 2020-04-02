@@ -9,6 +9,7 @@ public class Menu {
     User chef;
     List<Meal> meals;
     BigDecimal price;
+    String description;
 
     public Menu(int id, User chef, BigDecimal price) {
         this.id = id;
@@ -48,9 +49,20 @@ public class Menu {
         this.price = price;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
-        return "Menu [chef=" + chef + ", id=" + id + ", meals=" + meals + ", price=" + price + "]";
+        return "Menu [chef=" + chef + ", description=" + description + ", id=" + id + ", meals=" + meals + ", price="
+                + price + "]";
     }
+
+
 
 }

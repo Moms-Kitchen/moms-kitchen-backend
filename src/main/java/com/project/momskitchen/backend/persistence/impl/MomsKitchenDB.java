@@ -1,5 +1,6 @@
 package com.project.momskitchen.backend.persistence.impl;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
 import com.project.momskitchen.backend.model.Meal;
@@ -107,6 +108,7 @@ public class MomsKitchenDB {
             if(rs.absolute(1)){
                 chef = getUser(rs.getInt("idUser"));
                 mn = new Menu(rs.getInt("id"),chef,rs.getBigDecimal("prices"));
+                mn.setDescription(rs.getString("description"));
                 idMeal = rs.getInt("idMeal");
                 meals.add(getMeal(idMeal));
                 while(rs.next()){
@@ -114,6 +116,7 @@ public class MomsKitchenDB {
                     meals.add(getMeal(idMeal));
                 }
                 mn.setMeals(meals);
+                
                 c.close();
                 pstmt.close();
                 rs.close();
@@ -197,11 +200,13 @@ public class MomsKitchenDB {
             pstmt.setInt(1, idOrder);
             ResultSet rs = pstmt.executeQuery();
             int idMenu;
+            BigDecimal tp = null;
             rs.next();
             if(rs.absolute(1)){
                 customer = getUser(rs.getInt("idCustomer"));
                 chef = getUser(rs.getInt("idChef"));
                 od = new Order(rs.getInt("id"),rs.getDate("date"),rs.getString("description"),customer,chef);
+                tp  = new BigDecimal(rs.getInt("totalPrice"));
                 idMenu = rs.getInt("idMenu");
                 menus.add(getMenu(idMenu));
                 while(rs.next()){
@@ -209,6 +214,7 @@ public class MomsKitchenDB {
                     menus.add(getMenu(idMenu));
                 }
                 od.setMenus(menus);
+                od.setTotalPrice(tp);
                 c.close();
                 pstmt.close();
                 rs.close();
@@ -217,6 +223,42 @@ public class MomsKitchenDB {
             e.printStackTrace();
         }
         return od;
+    }
+
+    public List<Order> getCustomerOrders(int idCustomer) throws MomsPersistenceException {
+        String SQL = "SELECT * FROM public.\"order\" WHERE \"idCustomer\" = ? ";
+        List<Order> ods = new ArrayList<Order>();
+        int idOrderCreate;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setInt(1, idCustomer);
+            ResultSet rs = pstmt.executeQuery();
+            int idOrder;
+            rs.next();
+            if(rs.absolute(1)){
+                ods = new ArrayList<Order>();
+                idOrder = rs.getInt("id");
+                ods.add(getOrder(idOrder));
+                idOrderCreate = idOrder;
+                while(rs.next()){
+                    idOrder = rs.getInt("id");
+                    if(idOrder != idOrderCreate){
+                        ods.add(getOrder(idOrder));
+                        idOrderCreate = idOrder;
+                    }
+                }
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ods;
+        
     }
 
     public User getUser(int idUser) throws MomsPersistenceException {

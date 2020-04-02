@@ -1,6 +1,7 @@
 package com.project.momskitchen.backend.services.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.project.momskitchen.backend.dao.impl.OrderDAOimpl;
 import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
@@ -20,6 +21,11 @@ public class OrderServices implements Services {
     public Order getOrder(int idOrder) throws MomsPersistenceException{
         Order order = od.consultOrder(idOrder);
         return order;
+    }
+
+    public List<Order> getCustomerOrders(int idCustomer) throws MomsPersistenceException{
+        List<Order> orders = od.consultCustomerOrders(idCustomer);
+        return orders;
     }
 
     @Override

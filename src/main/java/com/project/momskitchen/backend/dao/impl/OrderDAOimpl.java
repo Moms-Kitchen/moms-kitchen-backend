@@ -1,5 +1,7 @@
 package com.project.momskitchen.backend.dao.impl;
 
+import java.util.List;
+
 import com.project.momskitchen.backend.dao.OrderDao;
 import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
 import com.project.momskitchen.backend.model.Menu;
@@ -26,6 +28,15 @@ public class OrderDAOimpl implements OrderDao {
             return null;
         }
 	}
+
+	public List<Order> consultCustomerOrders(int id) throws MomsPersistenceException{
+        try {
+            return bg.getCustomerOrders(id);
+        } catch (MomsPersistenceException e) {            
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 	@Override
 	public void insertarMenu(Menu menus) {
