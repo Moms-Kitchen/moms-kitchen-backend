@@ -55,7 +55,7 @@ public class MomsKitchenDB {
             c.setAutoCommit(false);
             stmt = c.createStatement();
             //SQL de ejemplo mientras se define lo que se va a ingresar a la base de datos
-            String sql = "INSERT INTO usuario (nombre,apellido,correo,contraseña,saldo,numerocedula) "
+            String sql = "INSERT INTO user (nombre,apellido,correo,contraseña,saldo,numerocedula) "
                +"VALUES ('"+usr.getName()+"','"+usr.getEmail()+"','"+usr.getPassword()+","+usr.getId()+");";
             stmt.executeUpdate(sql);
             stmt.close();
@@ -89,6 +89,31 @@ public class MomsKitchenDB {
             e.printStackTrace();
         }
         return user;
+    }
+
+    public Boolean createMenu(Menu menu) throws MomsPersistenceException {
+        Menu mn = menu;
+        Boolean b = false;
+        List<Meal> meals = mn.getMeals();
+        PreparedStatement pstmt = null;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            for (int i = 1; i < meals.size()+1; i++){
+
+                String SQL = "INSERT INTO public.\"menu\" (NumberLine,idMeal,idUser,prices,description) "
+                +"VALUES ('"+i+"','"+meals.get(i-1).getId()+"','"+meals.get(i-1).getPrice()+","+meals.get(i-1).getDescription()+");";
+                pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+                pstmt.executeQuery();
+                b = pstmt.execute();
+            }
+            c.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return b;
     }
 
     public Menu getMenu(int idMenu) throws MomsPersistenceException{
