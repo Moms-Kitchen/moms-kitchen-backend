@@ -48,7 +48,19 @@ public class MenuDAOimpl implements MenuDao {
     }
 
     @Override
-    public void insertarMenu(Meal meals) {
+    public Boolean createMenu(Menu menu) throws MomsPersistenceException{
+        Boolean b = false;
+        try {
+            b = bg.createMenu(menu);
+            return b; 
+        } catch (MomsPersistenceException e) {            
+            e.printStackTrace();
+            return b;
+        }
+    }
+
+    @Override
+    public void insertarAMenu(Meal meals) {
         // TODO Auto-generated method stub
 
     }

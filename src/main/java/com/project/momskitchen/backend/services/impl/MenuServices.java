@@ -34,6 +34,12 @@ public class MenuServices implements Services {
         return menus;
     }
 
+    public Boolean setMenu(Menu menu) throws MomsPersistenceException {
+        Boolean b = false;
+        b = md.createMenu(menu);
+        return b;
+    }
+
     @Override
     public void createElement(Object elemento) {
         // TODO Auto-generated method stub

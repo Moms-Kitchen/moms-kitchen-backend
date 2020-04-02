@@ -6,6 +6,7 @@ import com.project.momskitchen.backend.services.impl.MenuServices;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,6 +56,19 @@ public class MenuController{
         try {
             List<Menu> mns = ms.getMenus();
             return new ResponseEntity<>(mns, HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.POST , path = "/createMenu")
+    public ResponseEntity<?> setMenu(@RequestBody Menu menu){
+        try {
+            System.out.println("post Menu");
+            Boolean b = ms.setMenu(menu);
+            return new ResponseEntity<>(b, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);

@@ -9,6 +9,7 @@ public interface MenuDao{
 
     public Menu consultMenu () throws MomsPersistenceException;
     public Menu consultMenu(int id) throws MomsPersistenceException;
-    public void insertarMenu(Meal meals);
+    public Boolean createMenu(Menu menu) throws MomsPersistenceException;
+    public void insertarAMenu(Meal meals);
     public void updateMenu(Menu menu);
 }
