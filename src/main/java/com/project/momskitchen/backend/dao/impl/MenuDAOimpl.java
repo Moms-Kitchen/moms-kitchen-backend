@@ -38,6 +38,15 @@ public class MenuDAOimpl implements MenuDao {
         }
     }
 
+    public List<Menu> consultMenus() throws MomsPersistenceException{
+        try {
+            return bg.getMenus();
+        } catch (MomsPersistenceException e) {            
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @Override
     public void insertarMenu(Meal meals) {
         // TODO Auto-generated method stub

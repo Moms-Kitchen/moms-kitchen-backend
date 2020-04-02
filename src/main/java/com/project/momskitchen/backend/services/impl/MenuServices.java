@@ -29,6 +29,11 @@ public class MenuServices implements Services {
         return menus;
     }
 
+    public List<Menu> getMenus() throws MomsPersistenceException{
+        List<Menu> menus = md.consultMenus();
+        return menus;
+    }
+
     @Override
     public void createElement(Object elemento) {
         // TODO Auto-generated method stub

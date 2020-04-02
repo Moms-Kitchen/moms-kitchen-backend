@@ -162,6 +162,41 @@ public class MomsKitchenDB {
         return mns;
     }
 
+    public List<Menu> getMenus() throws MomsPersistenceException{
+        String SQL = "SELECT * FROM public.\"menu\" ";
+        List<Menu> mns = new ArrayList<Menu>();
+        int idMenuCreate;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            //pstmt.setInt(1, idUser);
+            ResultSet rs = pstmt.executeQuery();
+            int idMenu;
+            rs.next();
+            if(rs.absolute(1)){
+                mns = new ArrayList<Menu>();
+                idMenu = rs.getInt("id");
+                mns.add(getMenu(idMenu));
+                idMenuCreate = idMenu;
+                while(rs.next()){
+                    idMenu = rs.getInt("id");
+                    if(idMenu != idMenuCreate){
+                        mns.add(getMenu(idMenu));
+                        idMenuCreate = idMenu;
+                    }
+                }
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mns;
+    }
+
     public Meal getMeal(int idMeal) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"meal\" WHERE id = ? ";
 

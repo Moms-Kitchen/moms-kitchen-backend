@@ -49,5 +49,17 @@ public class MenuController{
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.GET , path = "/list")
+    public ResponseEntity<?> getMenus(){
+        try {
+            List<Menu> mns = ms.getMenus();
+            return new ResponseEntity<>(mns, HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
 
