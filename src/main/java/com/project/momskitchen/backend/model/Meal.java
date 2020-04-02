@@ -14,6 +14,13 @@ public class Meal{
         this.name = name;
         this.price = price;
     }
+
+    public Meal(int id, String name, BigDecimal price,String descripcion) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = descripcion;
+    }
     
     public String getName() {
         return name;
@@ -46,5 +53,12 @@ public class Meal{
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Meal [description=" + description + ", id=" + id + ", name=" + name + ", price=" + price + "]";
+    }
+
+    
 
 }

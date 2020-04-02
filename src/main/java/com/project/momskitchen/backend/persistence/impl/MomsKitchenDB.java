@@ -2,9 +2,13 @@ package com.project.momskitchen.backend.persistence.impl;
 
 import java.sql.*;
 import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
+import com.project.momskitchen.backend.model.Meal;
 import com.project.momskitchen.backend.model.Menu;
+import com.project.momskitchen.backend.model.Order;
 import com.project.momskitchen.backend.model.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,16 +89,25 @@ public class MomsKitchenDB {
     }
 
     public Menu getMenu(int idMenu) throws MomsPersistenceException{
-        String SQL = "SELECT * FROM public.\"Menu\" WHERE id = ? ";
+        String SQL = "SELECT * FROM public.\"menu\" WHERE id = ? ";
         Menu mn = null;
+        List<Meal> meals = new ArrayList<Meal>();
         try {
             realizaConexion();
             PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-            pstmt.setString(1, Integer.toString(idMenu));
+            pstmt.setInt(1, idMenu);
             ResultSet rs = pstmt.executeQuery();
+            int idMeal;
             rs.next();
             if(rs.absolute(1)){
-                mn = new Menu(rs.getInt("id"),rs.getInt("idUser"),rs.getBigDecimal("price"));
+                mn = new Menu(rs.getInt("id"),rs.getInt("idUser"),rs.getBigDecimal("prices"));
+                idMeal = rs.getInt("idMeal");
+                meals.add(getMeal(idMeal));
+                while(rs.next()){
+                    idMeal = rs.getInt("idMeal");
+                    meals.add(getMeal(idMeal));
+                }
+                mn.setMeals(meals);
                 c.close();
                 pstmt.close();
                 rs.close();
@@ -102,7 +115,59 @@ public class MomsKitchenDB {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return mn;
     }
+
+    public Meal getMeal(int idMeal) throws MomsPersistenceException {
+        String SQL = "SELECT * FROM public.\"meal\" WHERE id = ? ";
+
+        Meal meal = null;
+        try {
+            realizaConexion();
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setInt(1, idMeal);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            if(rs.absolute(1)){
+                meal = new Meal(rs.getInt("id"),rs.getString("name"),rs.getBigDecimal("price"),rs.getString("description"));
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return meal;
+    }
+
+    public Order getOrder(int idOrder) throws MomsPersistenceException {
+        String SQL = "SELECT * FROM public.\"order\" WHERE id = ? ";
+        Order od = null;
+        List<Menu> menus = new ArrayList<Menu>();
+        try {
+            realizaConexion();
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setInt(1, idOrder);
+            ResultSet rs = pstmt.executeQuery();
+            int idMenu;
+            rs.next();
+            if(rs.absolute(1)){
+                od = new Order(rs.getInt("id"),rs.getDate("date"),rs.getString("description"),rs.getInt("idCustomer"));
+                idMenu = rs.getInt("idMenu");
+                menus.add(getMenu(idMenu));
+                while(rs.next()){
+                    idMenu = rs.getInt("idMenu");
+                    menus.add(getMenu(idMenu));
+                }
+                od.setMenus(menus);
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return od;
+    }
+
 }
