@@ -143,6 +143,8 @@ public class MomsKitchenDB {
     public Order getOrder(int idOrder) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"order\" WHERE id = ? ";
         Order od = null;
+        User customer = null;
+        User chef = null;
         List<Menu> menus = new ArrayList<Menu>();
         try {
             realizaConexion();
@@ -152,7 +154,11 @@ public class MomsKitchenDB {
             int idMenu;
             rs.next();
             if(rs.absolute(1)){
-                od = new Order(rs.getInt("id"),rs.getDate("date"),rs.getString("description"),rs.getInt("idCustomer"));
+                customer = getUser(rs.getInt("idCustomer"));
+                System.out.println(customer.toString());
+                chef = getUser(rs.getInt("idChef"));
+                System.out.println(chef.toString());
+                od = new Order(rs.getInt("id"),rs.getDate("date"),rs.getString("description"),customer,chef);
                 idMenu = rs.getInt("idMenu");
                 menus.add(getMenu(idMenu));
                 while(rs.next()){
@@ -168,6 +174,28 @@ public class MomsKitchenDB {
             e.printStackTrace();
         }
         return od;
+    }
+
+    public User getUser(int idUser) throws MomsPersistenceException {
+        String SQL = "SELECT * FROM public.\"user\" WHERE id = ? ";
+
+        User user = null;
+        try {
+            realizaConexion();
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setInt(1, idUser);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            if(rs.absolute(1)){
+                user = new User(rs.getInt("id"), rs.getString("name"),rs.getString("address"),rs.getString("email"),rs.getBigDecimal("phone"),rs.getBoolean("chef"),rs.getFloat("rating"),rs.getByte("profilePicture"),rs.getString("password"),rs.getInt("idrole"));
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 
 }

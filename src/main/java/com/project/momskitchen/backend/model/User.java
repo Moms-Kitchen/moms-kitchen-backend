@@ -1,6 +1,7 @@
 package com.project.momskitchen.backend.model;
 
 import java.lang.reflect.Constructor;
+import java.math.BigDecimal;
 
 public class User{
 
@@ -8,7 +9,7 @@ public class User{
     String name;
     String address;
     String email;
-    float phone;
+    BigDecimal phone;
     boolean ischef;
     float rating;
     byte profilePicture;
@@ -22,15 +23,15 @@ public class User{
         this.name = null;
         this.address = null;
         this.email = null;
-        this.phone = 0;
+        this.phone = new BigDecimal(0);
         this.ischef = false;
         this.rating = 0;
         this.profilePicture = 0x0;
         this.password = null;
     }
 
-    public User(String name,String address, String email, float phone, Boolean chef, float rating, byte profilePicture, String password){
-        this.id = 0;
+    public User(int id, String name,String address, String email, BigDecimal phone, Boolean chef, float rating, byte profilePicture, String password){
+        this.id = id;
         this.name = name;
         this.address = address;
         this.email = email;
@@ -41,8 +42,8 @@ public class User{
         this.password = password;
     }
 
-    public User(String name,String address, String email, float phone, Boolean chef, float rating, byte profilePicture, String password, int role){
-        this.id = 0;
+    public User(int id, String name,String address, String email, BigDecimal phone, Boolean chef, float rating, byte profilePicture, String password, int role){
+        this.id = id;
         this.name = name;
         this.address = address;
         this.email = email;
@@ -55,8 +56,8 @@ public class User{
     }
 
     //User Constructor to deliver a login information package, used for login confirmation in the front end.
-    public User(String email, boolean ischef){
-        this.id = 0;
+    public User(int id,String email, boolean ischef){
+        this.id = id;
         this.name = null;
         this.address = null;
         this.email = email;
@@ -99,11 +100,11 @@ public class User{
         this.email = email;
     }
 
-    public float getPhone() {
+    public BigDecimal getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(BigDecimal phone) {
         this.phone = phone;
     }
 
@@ -139,10 +140,6 @@ public class User{
         this.ischef = ischef;
     }
 
-    public void setPhone(float phone) {
-        this.phone = phone;
-    }
-
     public int getRole() {
         return role;
     }
@@ -151,4 +148,20 @@ public class User{
         this.role = role;
     }
 
+    public boolean isIschef() {
+        return ischef;
+    }
+
+    public void setIschef(boolean ischef) {
+        this.ischef = ischef;
+    }
+
+    @Override
+    public String toString() {
+        return "User [address=" + address + ", email=" + email + ", id=" + id + ", ischef=" + ischef + ", name=" + name
+                + ", password=" + password + ", phone=" + phone + ", profilePicture=" + profilePicture + ", rating="
+                + rating + ", role=" + role + "]";
+    }
+
+    
 }
