@@ -11,14 +11,15 @@ public class Order {
     List<Menu> menus;
     Date orderDate;
     String description;
-    int idCustomer;
-    int idChef;
+    User Customer;
+    User Chef;
 
-    public Order(int id, Date orderDate, String description, int idCustomer) {
+    public Order(int id, Date orderDate, String description, User Customer, User Chef) {
         this.id = id;
         this.orderDate = orderDate;
         this.description = description;
-        this.idCustomer = idCustomer;
+        this.Customer = Customer;
+        this.Chef = Chef;
     }
 
     public BigDecimal getTotalPrice() {
@@ -35,14 +36,6 @@ public class Order {
 
     public void setMenus(List<Menu> menus) {
         this.menus = menus;
-    }
-
-    public int getIdChef() {
-        return idChef;
-    }
-
-    public void setIdChef(int idChef) {
-        this.idChef = idChef;
     }
 
     public Date getOrderDate() {
@@ -69,19 +62,28 @@ public class Order {
         this.id = id;
     }
 
-    public int getIdCustomer() {
-        return idCustomer;
+    public User getCustomer() {
+        return Customer;
     }
 
-    public void setIdCustomer(int idCustomer) {
-        this.idCustomer = idCustomer;
+    public void setCustomer(User customer) {
+        Customer = customer;
+    }
+
+    public User getChef() {
+        return Chef;
+    }
+
+    public void setChef(User chef) {
+        Chef = chef;
     }
 
     @Override
     public String toString() {
-        return "Order [description=" + description + ", id=" + id + ", idCustomer=" + idCustomer + ", menus=" + menus
-                + ", orderDate=" + orderDate + ", totalPrice=" + totalPrice + "]";
+        return "Order [Chef=" + Chef + ", Customer=" + Customer + ", description=" + description + ", id=" + id
+                + ", menus=" + menus + ", orderDate=" + orderDate + ", totalPrice=" + totalPrice + "]";
     }
+
 
       
 }
