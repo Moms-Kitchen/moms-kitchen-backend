@@ -103,7 +103,7 @@ public class MomsKitchenDB {
             for (int i = 1; i < meals.size()+1; i++){
 
                 String SQL = "INSERT INTO public.\"menu\" (NumberLine,idMeal,idUser,prices,description) "
-                +"VALUES ('"+i+"','"+meals.get(i-1).getId()+"','"+meals.get(i-1).getPrice()+","+meals.get(i-1).getDescription()+");";
+                +"VALUES ('"+i+"','"+meals.get(i-1).getId()+"','"+meals.get(i-1).getPrice()+"','"+meals.get(i-1).getDescription()+"');";
                 pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
                 pstmt.executeQuery();
                 b = pstmt.execute();

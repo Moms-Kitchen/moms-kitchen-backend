@@ -1,13 +1,19 @@
 package com.project.momskitchen.backend.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Meal{
-
+public class Meal implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
     int id;
     String name;
     String description;
     BigDecimal price;
+
+    public Meal(){
+        super();
+    }
 
     public Meal(int id, String name, BigDecimal price) {
         this.id = id;
