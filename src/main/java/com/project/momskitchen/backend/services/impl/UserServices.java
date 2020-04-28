@@ -6,7 +6,6 @@ import com.project.momskitchen.backend.dao.impl.UserDAOImpl;
 import com.project.momskitchen.backend.model.User;
 import com.project.momskitchen.backend.services.Services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
