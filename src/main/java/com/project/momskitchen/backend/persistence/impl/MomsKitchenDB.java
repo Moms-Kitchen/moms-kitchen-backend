@@ -114,10 +114,6 @@ public class MomsKitchenDB {
                 String SQL = "INSERT INTO public.\"menu\" (id,\"NumberLine\",\"idMeal\",\"idUser\",prices,description) "
                 +"VALUES ('"+idmn+"','"+i+"','"+meals.get(i-1).getId()+"','"+mn.getChef().getId()+"','"+meals.get(i-1).getPrice()+"','"+meals.get(i-1).getDescription()+"');";
                 pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-                
-                System.out.println(SQL);
-
-                //pstmt.executeQuery();
                 b = pstmt.execute();
                 b = true;
 
@@ -210,7 +206,6 @@ public class MomsKitchenDB {
                 realizaConexion();
             }
             PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-            //pstmt.setInt(1, idUser);
             ResultSet rs = pstmt.executeQuery();
             int idMenu;
             rs.next();
@@ -224,6 +219,40 @@ public class MomsKitchenDB {
                     if(idMenu != idMenuCreate){
                         mns.add(getMenu(idMenu));
                         idMenuCreate = idMenu;
+                    }
+                }
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mns;
+    }
+
+    public List<Meal> getMeals() throws MomsPersistenceException{
+        String SQL = "SELECT * FROM public.\"meal\" ";
+        List<Meal> mns = new ArrayList<Meal>();
+        int idMealCreate;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pstmt.executeQuery();
+            int idMeal;
+            rs.next();
+            if(rs.absolute(1)){
+                mns = new ArrayList<Meal>();
+                idMeal = rs.getInt("id");
+                mns.add(getMeal(idMeal));
+                idMealCreate = idMeal;
+                while(rs.next()){
+                    idMeal = rs.getInt("id");
+                    if(idMeal != idMealCreate){
+                        mns.add(getMeal(idMeal));
+                        idMealCreate = idMeal;
                     }
                 }
                 c.close();
@@ -258,6 +287,39 @@ public class MomsKitchenDB {
             e.printStackTrace();
         }
         return meal;
+    }
+
+    public Boolean createMeal(Meal meal) throws MomsPersistenceException {
+        Meal me = meal;
+        Boolean b = false;
+        PreparedStatement pstmt = null;
+        PreparedStatement pstmt2 = null;
+        String SQLcount = "SELECT count(distinct id) FROM public.\"meal\"";
+        System.out.println(SQLcount);
+        
+
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            pstmt2 = c.prepareStatement(SQLcount,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet mnid = pstmt2.executeQuery();
+            mnid.next();
+            int idmn = mnid.getInt("count")+1;
+
+            String SQL = "INSERT INTO public.\"meal\" (id,name,price,description) "
+            +"VALUES ('"+idmn+"','"+me.getName()+"','"+me.getPrice()+"','"+me.getDescription()+"');";
+            pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            b = pstmt.execute();
+            b = true;
+
+            
+            c.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return b;
     }
 
     public Order getOrder(int idOrder) throws MomsPersistenceException {
@@ -340,17 +402,27 @@ public class MomsKitchenDB {
         Boolean b = false;
         List<Menu> menus = or.getMenus();
         PreparedStatement pstmt = null;
+        PreparedStatement pstmt2 = null;
+        String SQLcount = "SELECT count(distinct id) FROM public.\"order\"";
+        System.out.println(SQLcount);
+        
+
         try {
             if(c == null || c.isClosed()){
                 realizaConexion();
             }
+            pstmt2 = c.prepareStatement(SQLcount,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet mnid = pstmt2.executeQuery();
+            mnid.next();
+            int idmn = mnid.getInt("count")+1;
             for (int i = 1; i < menus.size()+1; i++){
 
-                String SQL = "INSERT INTO public.\"menu\" (NumberLine,idMeal,idUser,prices,description) "
-                +"VALUES ('"+i+"','"+menus.get(i-1).getId()+"','"+menus.get(i-1).getPrice()+"','"+menus.get(i-1).getDescription()+"');";
+                String SQL = "INSERT INTO public.\"menu\" (id,\"numLine\", description, date, \"idMenu\", \"idCustomer\", \"totalPrice\", \"idChef\") "
+                +"VALUES ('"+idmn+"','"+i+"','"+or.getDescription()+"','"+or.getOrderDate()+"','"+menus.get(i-1).getId()+"','"+menus.get(i-1).getPrice()+"','"+or.getChef().getId()+"');";
                 pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-                pstmt.executeQuery();
                 b = pstmt.execute();
+                b = true;
+
             }
             c.close();
             pstmt.close();
