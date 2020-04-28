@@ -47,4 +47,17 @@ public class OrderController{
             return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
         }
     }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.POST , path = "/createOrder")
+    public ResponseEntity<?> setOrder(@RequestBody Order order){
+        try {
+            System.out.println("post Order");
+            Boolean b = os.setOrder(order);
+            return new ResponseEntity<>(b, HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+        }
+    }
 }

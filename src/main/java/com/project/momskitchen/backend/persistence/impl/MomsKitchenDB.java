@@ -29,7 +29,7 @@ public class MomsKitchenDB {
 
         try {            
             c = DriverManager.getConnection(urlDatabase,  usuarioDb, passwordDb);
-            System.out.println("La conexion se realizo sin problemas!");
+            //System.out.println("La conexion se realizo sin problemas!");
         } catch (SQLException ex) {
             Logger.getLogger(MomsKitchenDB.class.getName()).log(Level.SEVERE, null, ex);
         }        
@@ -96,17 +96,31 @@ public class MomsKitchenDB {
         Boolean b = false;
         List<Meal> meals = mn.getMeals();
         PreparedStatement pstmt = null;
+        PreparedStatement pstmt2 = null;
+        String SQLcount = "SELECT count(distinct id) FROM public.\"menu\"";
+        System.out.println(SQLcount);
+        
+
         try {
             if(c == null || c.isClosed()){
                 realizaConexion();
             }
+            pstmt2 = c.prepareStatement(SQLcount,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet mnid = pstmt2.executeQuery();
+            mnid.next();
+            int idmn = mnid.getInt("count")+1;
             for (int i = 1; i < meals.size()+1; i++){
 
-                String SQL = "INSERT INTO public.\"menu\" (NumberLine,idMeal,idUser,prices,description) "
-                +"VALUES ('"+i+"','"+meals.get(i-1).getId()+"','"+meals.get(i-1).getPrice()+"','"+meals.get(i-1).getDescription()+"');";
+                String SQL = "INSERT INTO public.\"menu\" (id,\"NumberLine\",\"idMeal\",\"idUser\",prices,description) "
+                +"VALUES ('"+idmn+"','"+i+"','"+meals.get(i-1).getId()+"','"+mn.getChef().getId()+"','"+meals.get(i-1).getPrice()+"','"+meals.get(i-1).getDescription()+"');";
                 pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-                pstmt.executeQuery();
+                
+                System.out.println(SQL);
+
+                //pstmt.executeQuery();
                 b = pstmt.execute();
+                b = true;
+
             }
             c.close();
             pstmt.close();
@@ -320,6 +334,33 @@ public class MomsKitchenDB {
         return ods;
         
     }
+
+    public Boolean createOrder(Order order) throws MomsPersistenceException {
+        Order or = order;
+        Boolean b = false;
+        List<Menu> menus = or.getMenus();
+        PreparedStatement pstmt = null;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            for (int i = 1; i < menus.size()+1; i++){
+
+                String SQL = "INSERT INTO public.\"menu\" (NumberLine,idMeal,idUser,prices,description) "
+                +"VALUES ('"+i+"','"+menus.get(i-1).getId()+"','"+menus.get(i-1).getPrice()+"','"+menus.get(i-1).getDescription()+"');";
+                pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+                pstmt.executeQuery();
+                b = pstmt.execute();
+            }
+            c.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+
 
     public User getUser(int idUser) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"user\" WHERE id = ? ";

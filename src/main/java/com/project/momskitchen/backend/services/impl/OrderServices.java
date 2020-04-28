@@ -28,6 +28,12 @@ public class OrderServices implements Services {
         return orders;
     }
 
+    public Boolean setOrder(Order order) throws MomsPersistenceException {
+        Boolean b = false;
+        b = od.createOrder(order);
+        return b;
+    }
+
     @Override
     public void createElement(Object elemento) {
         // TODO Auto-generated method stub
