@@ -36,7 +36,19 @@ public class OrderDAOimpl implements OrderDao {
             e.printStackTrace();
             return null;
         }
-    }
+	}
+	
+	@Override
+    public Boolean createOrder(Order order) throws MomsPersistenceException{
+        Boolean b = false;
+        try {
+            b = bg.createOrder(order);
+            return b; 
+        } catch (MomsPersistenceException e) {            
+            e.printStackTrace();
+            return b;
+        }
+	}
 
 	@Override
 	public void insertarMenu(Menu menus) {

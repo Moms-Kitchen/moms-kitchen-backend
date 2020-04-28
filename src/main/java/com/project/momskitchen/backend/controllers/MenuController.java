@@ -25,11 +25,8 @@ public class MenuController{
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method = RequestMethod.GET, path = "/{idMenu}")
     public ResponseEntity<?> getMenu(@PathVariable int idMenu){
-                System.out.println("API");
         try {
-            System.out.println("API TRY");
             Menu mn = ms.getMenu(idMenu);
-            System.out.println(mn.toString());
             return new ResponseEntity<>(mn, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             System.out.println("API CATCH");
