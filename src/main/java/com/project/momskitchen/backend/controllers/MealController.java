@@ -1,11 +1,7 @@
 package com.project.momskitchen.backend.controllers;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.project.momskitchen.backend.model.Order;
-import com.project.momskitchen.backend.services.impl.OrderServices;
+import com.project.momskitchen.backend.model.Meal;
+import com.project.momskitchen.backend.services.impl.MealServices;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping(value = "/orders")
-public class OrderController{
-    OrderServices os = new OrderServices();
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-    @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(method = RequestMethod.GET, path = "/{idOrder}")
-    public ResponseEntity<?> getMenu(@PathVariable int idOrder){
-                System.out.println("API");
+@RequestMapping("/meal")
+@RestController
+public class MealController {
+    MealServices ms = new MealServices();
+
+    @RequestMapping(method = RequestMethod.GET, path = "/{idMeal}")
+    public ResponseEntity<?> getMeal(@PathVariable int idMeal){
         try {
-            System.out.println("API TRY");
-            Order or = os.getOrder(idOrder);
-            System.out.println(or.toString());
-            return new ResponseEntity<>(or, HttpStatus.ACCEPTED);
+            Meal ml = ms.getMeal(idMeal);
+            return new ResponseEntity<>(ml, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             System.out.println("API CATCH");
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
@@ -38,11 +34,11 @@ public class OrderController{
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(method = RequestMethod.GET, path = "/customer/{idCustomer}")
-    public ResponseEntity<?> getOrdersCustomer(@PathVariable int idCustomer){
+    @RequestMapping(method = RequestMethod.GET , path = "/list")
+    public ResponseEntity<?> getMeals(){
         try {
-            List<Order> ods = os.getCustomerOrders(idCustomer);
-            return new ResponseEntity<>(ods, HttpStatus.ACCEPTED);
+            List<Meal> mls = ms.getMeals();
+            return new ResponseEntity<>(mls, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
@@ -50,15 +46,16 @@ public class OrderController{
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(method = RequestMethod.POST , path = "/createOrder")
-    public ResponseEntity<?> setOrder(@RequestBody Order order){
+    @RequestMapping(method = RequestMethod.POST , path = "/createMenu")
+    public ResponseEntity<?> setMeal(@RequestBody Meal meal){
         try {
-            System.out.println("post Order");
-            Boolean b = os.setOrder(order);
+            System.out.println("post Menu");
+            Boolean b = ms.setMeal(meal);
             return new ResponseEntity<>(b, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
         }
     }
+
 }
