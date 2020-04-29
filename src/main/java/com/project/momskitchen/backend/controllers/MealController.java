@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 public class MealController {
     MealServices ms = new MealServices();
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method = RequestMethod.GET, path = "/{idMeal}")
     public ResponseEntity<?> getMeal(@PathVariable int idMeal){
         try {
@@ -54,7 +55,7 @@ public class MealController {
             return new ResponseEntity<>(b, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("ERROR 406", HttpStatus.NOT_ACCEPTABLE);
         }
     }
 

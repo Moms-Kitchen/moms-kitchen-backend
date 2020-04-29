@@ -8,6 +8,9 @@ import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
 import com.project.momskitchen.backend.model.Meal;
 import com.project.momskitchen.backend.services.Services;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class MealServices implements Services {
 
     

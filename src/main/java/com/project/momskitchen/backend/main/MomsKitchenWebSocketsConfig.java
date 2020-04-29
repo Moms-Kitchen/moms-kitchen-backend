@@ -18,7 +18,6 @@ public class MomsKitchenWebSocketsConfig extends AbstractWebSocketMessageBrokerC
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stompendpoint").withSockJS();
-
     }
 
 }

@@ -28,6 +28,11 @@ public class OrderServices implements Services {
         return orders;
     }
 
+    public List<Order> getOrders() throws MomsPersistenceException{
+        List<Order> orders = od.consultOrders();
+        return orders;
+    }
+
     public Boolean setOrder(Order order) throws MomsPersistenceException {
         Boolean b = false;
         b = od.createOrder(order);
