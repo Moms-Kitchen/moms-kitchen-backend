@@ -2,6 +2,7 @@ package com.project.momskitchen.backend.controllers;
 
 import javax.annotation.PostConstruct;
 
+import com.google.gson.Gson;
 import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
 import com.project.momskitchen.backend.model.Meal;
 import com.project.momskitchen.backend.model.Menu;
@@ -40,10 +41,10 @@ import org.springframework.stereotype.Controller;
         mgt2 = this.mgt;
     }
 
-    @MessageMapping("/createMenu.{Menu}")
-    public  void createMenu(@DestinationVariable Menu menu ) throws MomsPersistenceException{
-        menuservices.setMenu(menu);
-        mgt.convertAndSend("/topic", menuservices.getMenus());
+    @MessageMapping("/createMenu")
+    public  void createMenu(String check) throws MomsPersistenceException{
+        System.out.println("New menu [socket]");
+        mgt.convertAndSend("/topic/Menus", new Gson().toJson(menuservices.getMenus()));
     }
 
     @MessageMapping("/createOrder.{Order}")
@@ -57,5 +58,4 @@ import org.springframework.stereotype.Controller;
         mealservices.setMeal(meal);
         mgt.convertAndSend("/topic", mealservices.getMeals());
     }
-
 }

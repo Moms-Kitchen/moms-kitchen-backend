@@ -83,7 +83,7 @@ public class MomsKitchenDB {
             rs.next();
             if(rs.absolute(1)){
                 user = new User(rs.getInt("id"),rs.getString("name"),rs.getString("address"),rs.getString("email"),rs.getBigDecimal("phone"), rs.getBoolean("chef"),rs.getFloat("rating"),rs.getByte("profilePicture"),rs.getString("password"));
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -120,7 +120,7 @@ public class MomsKitchenDB {
                 b = true;
 
             }
-            c.close();
+            /* c.close(); */
             pstmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -154,7 +154,7 @@ public class MomsKitchenDB {
                 }
                 mn.setMeals(meals);
                 
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -189,7 +189,7 @@ public class MomsKitchenDB {
                         idMenuCreate = idMenu;
                     }
                 }
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -200,6 +200,7 @@ public class MomsKitchenDB {
     }
 
     public List<Menu> getMenus() throws MomsPersistenceException{
+        System.out.println("Querying...");
         String SQL = "SELECT * FROM public.\"menu\" ";
         List<Menu> mns = new ArrayList<Menu>();
         int idMenuCreate;
@@ -223,13 +224,14 @@ public class MomsKitchenDB {
                         idMenuCreate = idMenu;
                     }
                 }
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(true);
         return mns;
     }
 
@@ -257,7 +259,7 @@ public class MomsKitchenDB {
                         idMealCreate = idMeal;
                     }
                 }
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -281,7 +283,7 @@ public class MomsKitchenDB {
             rs.next();
             if(rs.absolute(1)){
                 meal = new Meal(rs.getInt("id"),rs.getString("name"),rs.getBigDecimal("price"),rs.getString("description"));
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -310,7 +312,7 @@ public class MomsKitchenDB {
                     meal = new Meal(rs.getInt("id"),rs.getString("name"),rs.getBigDecimal("price"),rs.getString("description"));
                     meals.add(meal);
                 }                
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -345,7 +347,7 @@ public class MomsKitchenDB {
             b = true;
 
             
-            c.close();
+            /* c.close(); */
             pstmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -382,7 +384,7 @@ public class MomsKitchenDB {
                 }
                 od.setMenus(menus);
                 od.setTotalPrice(tp);
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -416,7 +418,7 @@ public class MomsKitchenDB {
                         idOrderCreate = idOrder;
                     }
                 }
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -452,7 +454,7 @@ public class MomsKitchenDB {
                         idOrderCreate = idOrder;
                     }
                 }
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -490,7 +492,7 @@ public class MomsKitchenDB {
                 b = true;
 
             }
-            c.close();
+            /* c.close(); */
             pstmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -514,7 +516,7 @@ public class MomsKitchenDB {
             rs.next();
             if(rs.absolute(1)){
                 user = new User(rs.getInt("id"), rs.getString("name"),rs.getString("address"),rs.getString("email"),rs.getBigDecimal("phone"),rs.getBoolean("chef"),rs.getFloat("rating"),rs.getByte("profilePicture"),rs.getString("password"),rs.getInt("idrole"));
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
@@ -538,7 +540,7 @@ public class MomsKitchenDB {
             rs.next();
             if(rs.absolute(1)){
                 user = new User(rs.getInt("id"), rs.getString("name"),rs.getString("address"),rs.getString("email"),rs.getBigDecimal("phone"),rs.getBoolean("chef"),rs.getFloat("rating"),rs.getByte("profilePicture"),rs.getString("password"),rs.getInt("idrole"));
-                c.close();
+                /* c.close(); */
                 pstmt.close();
                 rs.close();
             }
