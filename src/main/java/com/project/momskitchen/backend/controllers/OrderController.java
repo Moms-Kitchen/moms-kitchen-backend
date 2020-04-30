@@ -50,6 +50,18 @@ public class OrderController{
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.GET , path = "/list")
+    public ResponseEntity<?> getOrders(){
+        try {
+            List<Order> ods = os.getOrders();
+            return new ResponseEntity<>(ods, HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method = RequestMethod.POST , path = "/createOrder")
     public ResponseEntity<?> setOrder(@RequestBody Order order){
         try {
@@ -58,7 +70,7 @@ public class OrderController{
             return new ResponseEntity<>(b, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("ERROR 406", HttpStatus.NOT_ACCEPTABLE);
         }
     }
 }

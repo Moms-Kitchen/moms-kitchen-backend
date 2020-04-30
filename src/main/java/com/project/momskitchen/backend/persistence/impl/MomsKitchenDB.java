@@ -392,6 +392,41 @@ public class MomsKitchenDB {
         return od;
     }
 
+    public List<Order> getOrders() throws MomsPersistenceException{
+        String SQL = "SELECT * FROM public.\"order\" ";
+        List<Order> ods = new ArrayList<Order>();
+        int idOrderCreate;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pstmt.executeQuery();
+            int idOrder;
+            rs.next();
+            if(rs.absolute(1)){
+                ods = new ArrayList<Order>();
+                idOrder = rs.getInt("id");
+                ods.add(getOrder(idOrder));
+                idOrderCreate = idOrder;
+                while(rs.next()){
+                    idOrder = rs.getInt("id");
+                    if(idOrder != idOrderCreate){
+                        ods.add(getOrder(idOrder));
+                        idOrderCreate = idOrder;
+                    }
+                }
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ods;
+    }
+
+
     public List<Order> getCustomerOrders(int idCustomer) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"order\" WHERE \"idCustomer\" = ? ";
         List<Order> ods = new ArrayList<Order>();
