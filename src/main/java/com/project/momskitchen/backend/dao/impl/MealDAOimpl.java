@@ -28,7 +28,16 @@ public class MealDAOimpl implements MealDao{
             e.printStackTrace();
             return null;
         }
-	}
+    }
+    
+    public List<Meal> consultMealsByName(String mealname) throws MomsPersistenceException {
+		try {
+            return bg.getMealsByName(mealname);
+        } catch (MomsPersistenceException e) {            
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 	
 	@Override

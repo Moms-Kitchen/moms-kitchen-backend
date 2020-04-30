@@ -23,6 +23,8 @@ public class MomsKitchenDB {
     public static void main(String[] args) throws MomsPersistenceException {
         MomsKitchenDB bg = new MomsKitchenDB();
         bg.realizaConexion();
+
+        System.out.println("'holi'");
     }
 
     public void realizaConexion() throws MomsPersistenceException{
@@ -287,6 +289,35 @@ public class MomsKitchenDB {
             e.printStackTrace();
         }
         return meal;
+    }
+
+    public List<Meal> getMealsByName(String mealname) throws MomsPersistenceException {
+        String SQL = "SELECT * FROM public.\"meal\" WHERE name ILIKE '%"+ mealname +"%'";
+
+        Meal meal = null;
+        List<Meal> meals = new ArrayList<Meal>();
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);            
+            ResultSet rs = pstmt.executeQuery();  
+            rs.next();          
+            if(rs.absolute(1)){
+                meal = new Meal(rs.getInt("id"),rs.getString("name"),rs.getBigDecimal("price"),rs.getString("description"));
+                meals.add(meal);
+                while(rs.next()){
+                    meal = new Meal(rs.getInt("id"),rs.getString("name"),rs.getBigDecimal("price"),rs.getString("description"));
+                    meals.add(meal);
+                }                
+                c.close();
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return meals;
     }
 
     public Boolean createMeal(Meal meal) throws MomsPersistenceException {

@@ -8,6 +8,9 @@ import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
 import com.project.momskitchen.backend.model.Meal;
 import com.project.momskitchen.backend.services.Services;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class MealServices implements Services {
 
     
@@ -19,6 +22,10 @@ public class MealServices implements Services {
     public Meal getMeal(int idMeal) throws MomsPersistenceException{
         Meal meal = md.consultMeal(idMeal);
         return meal;
+    }
+
+    public List<Meal> getMealsByName(String mealname) throws MomsPersistenceException{        
+        return md.consultMealsByName(mealname);
     }
 
     public List<Meal> getMeals() throws MomsPersistenceException{

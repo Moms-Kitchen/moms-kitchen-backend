@@ -21,10 +21,24 @@ import java.util.logging.Logger;
 public class MealController {
     MealServices ms = new MealServices();
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method = RequestMethod.GET, path = "/{idMeal}")
     public ResponseEntity<?> getMeal(@PathVariable int idMeal){
         try {
             Meal ml = ms.getMeal(idMeal);
+            return new ResponseEntity<>(ml, HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
+            System.out.println("API CATCH");
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.GET, path = "/stringmeal/{mealname}")
+    public ResponseEntity<?> getMealsbymatch(@PathVariable String mealname){
+        try {
+            List<Meal> ml = ms.getMealsByName(mealname);
             return new ResponseEntity<>(ml, HttpStatus.ACCEPTED);
         } catch (Exception ex) {
             System.out.println("API CATCH");
@@ -57,5 +71,4 @@ public class MealController {
             return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
         }
     }
-
 }
