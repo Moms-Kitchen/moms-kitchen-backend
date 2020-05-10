@@ -1,10 +1,15 @@
 package com.project.momskitchen.backend.model;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 
-public class User{
+public class User implements Serializable{
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     int id;
     String name;
     String address;
@@ -17,7 +22,8 @@ public class User{
     int role;
 
     //CreditCard card; /-- for future use
-    
+        
+
     public User(){
         this.id = 0;
         this.name = null;
@@ -41,6 +47,7 @@ public class User{
         this.profilePicture = profilePicture;
         this.password = password;
     }
+
 
     public User(int id, String name,String address, String email, BigDecimal phone, Boolean chef, float rating, byte profilePicture, String password, int role){
         this.id = id;
@@ -130,15 +137,7 @@ public class User{
 
     public void setPassword(String contra) {
         this.password = contra;
-    }
-
-    public boolean isChef() {
-        return ischef;
-    }
-
-    public void setChef(boolean ischef) {
-        this.ischef = ischef;
-    }
+    }    
 
     public int getRole() {
         return role;

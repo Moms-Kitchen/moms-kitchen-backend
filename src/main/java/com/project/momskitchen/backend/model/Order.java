@@ -13,13 +13,16 @@ public class Order {
     String description;
     User Customer;
     User Chef;
+    boolean pendingPayment;
 
-    public Order(int id, Date orderDate, String description, User Customer, User Chef) {
+    public Order(int id, Date orderDate, String description, User Customer, User Chef, boolean pendingPayment) {
         this.id = id;
         this.orderDate = orderDate;
         this.description = description;
         this.Customer = Customer;
         this.Chef = Chef;
+        this.pendingPayment = pendingPayment;
+
     }
 
     public BigDecimal getTotalPrice() {
@@ -78,12 +81,18 @@ public class Order {
         Chef = chef;
     }
 
+    public boolean isPendingPayment() {
+        return pendingPayment;
+    }
+
+    public void setPendingPayment(boolean pendingPayment) {
+        this.pendingPayment = pendingPayment;
+    }
+
     @Override
     public String toString() {
         return "Order [Chef=" + Chef + ", Customer=" + Customer + ", description=" + description + ", id=" + id
-                + ", menus=" + menus + ", orderDate=" + orderDate + ", totalPrice=" + totalPrice + "]";
+                + ", menus=" + menus + ", orderDate=" + orderDate + ", totalPrice=" + totalPrice + ",pendingPayment=" + pendingPayment +"]";
     }
 
-
-      
 }

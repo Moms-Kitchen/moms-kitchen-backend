@@ -27,7 +27,26 @@ public class OrderDAOimpl implements OrderDao {
             e.printStackTrace();
             return null;
         }
-	}
+    }
+
+    public List<Order> getPendingOrders(int idcustomer) throws MomsPersistenceException {
+		try {
+            return bg.getPendingOrders(idcustomer);
+        } catch (MomsPersistenceException e) {            
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public List<Order> getChefOrders(int idchef) throws MomsPersistenceException {
+		try {
+            return bg.getPendingOrders(idchef);
+        } catch (MomsPersistenceException e) {            
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
 
 	public List<Order> consultCustomerOrders(int id) throws MomsPersistenceException{
         try {

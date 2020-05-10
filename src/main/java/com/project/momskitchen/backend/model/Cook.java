@@ -4,8 +4,16 @@ import java.util.List;
 
 public class Cook extends User {    
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     List<Meal> menus;
     List<String> specialties;
+
+    public Cook(){
+        super();
+    }
 
     public List<Meal> getMenus() {
         return menus;

@@ -38,6 +38,38 @@ public class OrderController{
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.GET, path = "/cart/{idcustomer}")
+    public ResponseEntity<?> getPendingOrders(@PathVariable int idcustomer){
+                System.out.println("API");
+        try {
+            System.out.println("API TRY");
+            List<Order> ods = os.getPendingOrders(idcustomer);
+            System.out.println(ods.toString());
+            return new ResponseEntity<>(ods, HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
+            System.out.println("API CATCH");
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.GET, path = "/chef/{idchef}")
+    public ResponseEntity<?> getChefOrders(@PathVariable int idchef){
+                System.out.println("API");
+        try {
+            System.out.println("API TRY");
+            List<Order> ods = os.getChefOrders(idchef);
+            System.out.println(ods.toString());
+            return new ResponseEntity<>(ods, HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
+            System.out.println("API CATCH");
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("ERROR 404", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method = RequestMethod.GET, path = "/customer/{idCustomer}")
     public ResponseEntity<?> getOrdersCustomer(@PathVariable int idCustomer){
         try {
