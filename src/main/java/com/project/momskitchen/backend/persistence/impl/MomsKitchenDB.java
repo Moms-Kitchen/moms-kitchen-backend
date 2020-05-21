@@ -113,8 +113,8 @@ public class MomsKitchenDB {
             int idmn = mnid.getInt("count")+1;
             for (int i = 1; i < meals.size()+1; i++){
 
-                String SQL = "INSERT INTO public.\"menu\" (id,\"NumberLine\",\"idMeal\",\"idUser\",prices,description) "
-                +"VALUES ('"+idmn+"','"+i+"','"+meals.get(i-1).getId()+"','"+mn.getChef().getId()+"','"+meals.get(i-1).getPrice()+"','"+meals.get(i-1).getDescription()+"');";
+                String SQL = "INSERT INTO public.\"menu\" (id,\"NumberLine\",\"idMeal\",\"idUser\",prices,description,\"name\") "
+                +"VALUES ('"+idmn+"','"+i+"','"+meals.get(i-1).getId()+"','"+mn.getChef().getId()+"','"+mn.getPrice()+"','"+mn.getDescription()+"','"+mn.getName()+"');";
                 pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
                 b = pstmt.execute();
                 b = true;
@@ -146,6 +146,7 @@ public class MomsKitchenDB {
                 chef = getUser(rs.getInt("idUser"));
                 mn = new Menu(rs.getInt("id"),chef,rs.getBigDecimal("prices"));
                 mn.setDescription(rs.getString("description"));
+                mn.setName(rs.getString("name"));
                 idMeal = rs.getInt("idMeal");
                 meals.add(getMeal(idMeal));
                 while(rs.next()){
@@ -485,8 +486,8 @@ public class MomsKitchenDB {
             int idmn = mnid.getInt("count")+1;
             for (int i = 1; i < menus.size()+1; i++){
 
-                String SQL = "INSERT INTO public.\"menu\" (id,\"numLine\", description, date, \"idMenu\", \"idCustomer\", \"totalPrice\", \"idChef\") "
-                +"VALUES ('"+idmn+"','"+i+"','"+or.getDescription()+"','"+or.getOrderDate()+"','"+menus.get(i-1).getId()+"','"+menus.get(i-1).getPrice()+"','"+or.getChef().getId()+"');";
+                String SQL = "INSERT INTO public.\"menu\" (id,\"numLine\", description, date, \"idMenu\", \"idCustomer\", \"totalPrice\", \"idChef\",\"name\") "
+                +"VALUES ('"+idmn+"','"+i+"','"+or.getDescription()+"','"+or.getOrderDate()+"','"+menus.get(i-1).getId()+"','"+menus.get(i-1).getPrice()+"','"+or.getChef().getId()+"','"+or.getDescription()+"');";
                 pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
                 b = pstmt.execute();
                 b = true;

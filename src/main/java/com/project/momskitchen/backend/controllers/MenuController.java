@@ -63,7 +63,9 @@ public class MenuController{
     @RequestMapping(method = RequestMethod.POST , path = "/createMenu")
     public ResponseEntity<?> setMenu(@RequestBody Menu menu){
         try {
+            
             System.out.println("post Menu");
+            System.out.println("\n\n\nMENU: " + menu + "\n\n\n");
             Boolean b = ms.setMenu(menu);
             return new ResponseEntity<>(b, HttpStatus.ACCEPTED);
         } catch (Exception ex) {

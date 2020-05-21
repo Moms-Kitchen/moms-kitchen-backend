@@ -12,6 +12,7 @@ public class Menu implements Serializable{
     List<Meal> meals;
     BigDecimal price;
     String description;
+    String name;
 
     public Menu(){
         super();
@@ -63,9 +64,17 @@ public class Menu implements Serializable{
         this.description = description;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
-        return "Menu [chef=" + chef + ", description=" + description + ", id=" + id + ", meals=" + meals + ", price="
+        return "Menu [chef=" + chef + ", name=" + name + ", description=" + description + ", id=" + id + ", meals=" + meals + ", price="
                 + price + "]";
     }
 
