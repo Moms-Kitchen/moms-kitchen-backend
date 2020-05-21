@@ -356,6 +356,78 @@ public class MomsKitchenDB {
         return b;
     }
 
+    public List<Order> getPendingOrders(int idcustomer) throws MomsPersistenceException {
+        System.out.println("getPendingOrders");
+        String SQL = "SELECT * FROM \"order\" o2 where \"idCustomer\" = ? and pendingpayment = true";
+        List<Order> ods = new ArrayList<Order>();
+        int idOrderCreate;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setInt(1, idcustomer);
+            ResultSet rs = pstmt.executeQuery();
+            int idOrder;
+            rs.next();
+            if(rs.absolute(1)){
+                ods = new ArrayList<Order>();
+                idOrder = rs.getInt("id");
+                ods.add(getOrder(idOrder));
+                idOrderCreate = idOrder;
+                while(rs.next()){
+                    idOrder = rs.getInt("id");
+                    if(idOrder != idOrderCreate){
+                        ods.add(getOrder(idOrder));
+                        idOrderCreate = idOrder;
+                    }
+                }
+                /* c.close(); */
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ods;
+    }
+
+    public List<Order> getChefOrders(int idchef) throws MomsPersistenceException {
+        System.out.println("getPendingOrders");
+        String SQL = "SELECT * FROM \"order\" o2 where \"idChef\" = ? and pendingpayment = false";
+        List<Order> ods = new ArrayList<Order>();
+        int idOrderCreate;
+        try {
+            if(c == null || c.isClosed()){
+                realizaConexion();
+            }
+            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt.setInt(1, idchef);
+            ResultSet rs = pstmt.executeQuery();
+            int idOrder;
+            rs.next();
+            if(rs.absolute(1)){
+                ods = new ArrayList<Order>();
+                idOrder = rs.getInt("id");
+                ods.add(getOrder(idOrder));
+                idOrderCreate = idOrder;
+                while(rs.next()){
+                    idOrder = rs.getInt("id");
+                    if(idOrder != idOrderCreate){
+                        ods.add(getOrder(idOrder));
+                        idOrderCreate = idOrder;
+                    }
+                }
+                /* c.close(); */
+                pstmt.close();
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ods;
+    }    
+
     public Order getOrder(int idOrder) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"order\" WHERE id = ? ";
         Order od = null;
@@ -375,7 +447,7 @@ public class MomsKitchenDB {
             if(rs.absolute(1)){
                 customer = getUser(rs.getInt("idCustomer"));
                 chef = getUser(rs.getInt("idChef"));
-                od = new Order(rs.getInt("id"),rs.getDate("date"),rs.getString("description"),customer,chef);
+                od = new Order(rs.getInt("id"),rs.getDate("date"),rs.getString("description"),customer,chef,rs.getBoolean("pendingpayment"));
                 tp  = new BigDecimal(rs.getInt("totalPrice"));
                 idMenu = rs.getInt("idMenu");
                 menus.add(getMenu(idMenu));
@@ -486,8 +558,9 @@ public class MomsKitchenDB {
             int idmn = mnid.getInt("count")+1;
             for (int i = 1; i < menus.size()+1; i++){
 
-                String SQL = "INSERT INTO public.\"menu\" (id,\"numLine\", description, date, \"idMenu\", \"idCustomer\", \"totalPrice\", \"idChef\",\"name\") "
-                +"VALUES ('"+idmn+"','"+i+"','"+or.getDescription()+"','"+or.getOrderDate()+"','"+menus.get(i-1).getId()+"','"+menus.get(i-1).getPrice()+"','"+or.getChef().getId()+"','"+or.getDescription()+"');";
+                String SQL = "INSERT INTO public.\"order\" (id,\"numLine\", description, date, \"idMenu\", \"idCustomer\", \"totalPrice\", \"idChef\", \"pendingpayment\")"
+                +"VALUES ('"+idmn+"','"+i+"','"+or.getDescription()+"','"+or.getOrderDate()+"','"+menus.get(i-1).getId()+"','"+or.getCustomer().getId()+"','"+menus.get(i-1).getPrice()+"','"+or.getChef().getId()+"','"+or.isPendingPayment()+"');";
+
                 pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
                 b = pstmt.execute();
                 b = true;

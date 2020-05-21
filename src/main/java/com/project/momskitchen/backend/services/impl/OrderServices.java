@@ -23,6 +23,18 @@ public class OrderServices implements Services {
         return order;
     }
 
+    public List<Order> getPendingOrders(int idcustomer) throws MomsPersistenceException{
+        List<Order> ods = od.getPendingOrders(idcustomer);
+        return ods;
+    }
+
+    public List<Order> getChefOrders(int idchef) throws MomsPersistenceException{
+        List<Order> ods = od.getChefOrders(idchef);
+        return ods;
+    }
+    
+    
+
     public List<Order> getCustomerOrders(int idCustomer) throws MomsPersistenceException{
         List<Order> orders = od.consultCustomerOrders(idCustomer);
         return orders;
