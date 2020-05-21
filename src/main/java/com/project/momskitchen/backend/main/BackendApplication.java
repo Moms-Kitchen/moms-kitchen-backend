@@ -27,7 +27,7 @@ public class BackendApplication extends SpringBootServletInitializer {
 	// 			registry.addMapping("/**")
 	// 			.allowedMethods("GET","POST")
 	// 			.allowedHeaders("*")
-	// 			.allowedOrigins("http://localhost:3000");
+	// 			.allowedOrigins("https://momskitchenapp.herokuapp.com");
 	// 		}
 	// 	};
 	// }

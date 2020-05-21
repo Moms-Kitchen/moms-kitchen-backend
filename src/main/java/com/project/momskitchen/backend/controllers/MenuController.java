@@ -22,7 +22,7 @@ public class MenuController{
     
     MenuServices ms = new MenuServices();
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/{idMenu}")
     public ResponseEntity<?> getMenu(@PathVariable int idMenu){
         try {
@@ -35,7 +35,7 @@ public class MenuController{
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/chef/{idCocinero}")
     public ResponseEntity<?> getMenusCocinero(@PathVariable int idCocinero){
         try {
@@ -47,7 +47,7 @@ public class MenuController{
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET , path = "/list")
     public ResponseEntity<?> getMenus(){
         try {
@@ -59,7 +59,7 @@ public class MenuController{
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.POST , path = "/createMenu")
     public ResponseEntity<?> setMenu(@RequestBody Menu menu){
         try {

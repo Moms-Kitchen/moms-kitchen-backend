@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController{
     OrderServices os = new OrderServices();
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/{idOrder}")
     public ResponseEntity<?> getMenu(@PathVariable int idOrder){
                 System.out.println("API");
@@ -37,7 +37,7 @@ public class OrderController{
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/cart/{idcustomer}")
     public ResponseEntity<?> getPendingOrders(@PathVariable int idcustomer){
                 System.out.println("API");
@@ -53,7 +53,7 @@ public class OrderController{
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/chef/{idchef}")
     public ResponseEntity<?> getChefOrders(@PathVariable int idchef){
                 System.out.println("API");
@@ -69,7 +69,7 @@ public class OrderController{
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/customer/{idCustomer}")
     public ResponseEntity<?> getOrdersCustomer(@PathVariable int idCustomer){
         try {
@@ -81,7 +81,7 @@ public class OrderController{
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET , path = "/list")
     public ResponseEntity<?> getOrders(){
         try {
@@ -93,7 +93,7 @@ public class OrderController{
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.POST , path = "/createOrder")
     public ResponseEntity<?> setOrder(@RequestBody Order order){
         try {

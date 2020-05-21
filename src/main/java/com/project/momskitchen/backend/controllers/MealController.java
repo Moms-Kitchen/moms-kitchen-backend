@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class MealController {
     MealServices ms = new MealServices();
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/{idMeal}")
     public ResponseEntity<?> getMeal(@PathVariable int idMeal){
         try {
@@ -34,7 +34,7 @@ public class MealController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/stringmeal/{mealname}")
     public ResponseEntity<?> getMealsbymatch(@PathVariable String mealname){
         try {
@@ -47,7 +47,7 @@ public class MealController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET , path = "/list")
     public ResponseEntity<?> getMeals(){
         try {
@@ -59,7 +59,7 @@ public class MealController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.POST , path = "/createMenu")
     public ResponseEntity<?> setMeal(@RequestBody Meal meal){
         try {

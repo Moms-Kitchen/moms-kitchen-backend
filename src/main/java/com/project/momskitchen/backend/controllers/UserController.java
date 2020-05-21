@@ -17,7 +17,7 @@ public class UserController {
 
     UserServices usi = new UserServices();
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/{email}/{password}")
     public ResponseEntity<?> verifyLogin(@PathVariable("email") String email, @PathVariable("password") String password)
             throws InterruptedException {
@@ -25,7 +25,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.POST, path = "/user")
     public ResponseEntity<?> addUser(@RequestBody User user) throws InterruptedException, MomsPersistenceException
     {
@@ -33,7 +33,7 @@ public class UserController {
         return new ResponseEntity<>(res,HttpStatus.ACCEPTED);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "https://momskitchenapp.herokuapp.com")
     @RequestMapping(method = RequestMethod.GET, path = "/user/{email}")
     public ResponseEntity<?> getUser(@PathVariable String email){
                 System.out.println("API");
