@@ -36,6 +36,10 @@ public class UserDAOImpl implements UserDao {
         }
     }
 
+    public boolean addUser(User user) throws MomsPersistenceException {
+        return bg.insertarUsuario(user);
+    }
+
     @Override
     public void insertarUsuario(int cedula, String nombre, String apellido, String correo, String contra) {
         // TODO Auto-generated method stub

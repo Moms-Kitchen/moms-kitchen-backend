@@ -7,9 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
 import com.project.momskitchen.backend.model.User;
 import com.project.momskitchen.backend.services.impl.UserServices;
-
 
 @RequestMapping("/session")
 @RestController
@@ -17,13 +17,20 @@ public class UserController {
 
     UserServices usi = new UserServices();
 
-    @CrossOrigin(origins = "http://localhost:3000")    
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method = RequestMethod.GET, path = "/{email}/{password}")
-    public ResponseEntity<?> verifyLogin(@PathVariable("email") String email,
-           @PathVariable("password") String password) throws InterruptedException
-    {
+    public ResponseEntity<?> verifyLogin(@PathVariable("email") String email, @PathVariable("password") String password)
+            throws InterruptedException {
         User user = usi.authenticateUser(email, password);
-        return new ResponseEntity<>(user,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(method = RequestMethod.POST, path = "/user")
+    public ResponseEntity<?> addUser(@RequestBody User user) throws InterruptedException, MomsPersistenceException
+    {
+        boolean res = usi.addUser(user);
+        return new ResponseEntity<>(res,HttpStatus.ACCEPTED);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")

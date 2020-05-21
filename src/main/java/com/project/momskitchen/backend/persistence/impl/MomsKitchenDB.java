@@ -14,10 +14,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MomsKitchenDB {
-    //Direccion del DB de prueba
+    // Direccion del DB de prueba
     private String urlDatabase = "jdbc:postgresql://ec2-54-165-36-134.compute-1.amazonaws.com:5432/d3ckljhjikb54l";
     private String usuarioDb = "khmwcxngcevhfl";
-    private String passwordDb= "00d145a9ac598e7f244c56b463bbe44d5a4bdc9820f5de415a04bd65745dfa02";
+    private String passwordDb = "00d145a9ac598e7f244c56b463bbe44d5a4bdc9820f5de415a04bd65745dfa02";
     static Connection c = null;
 
     public static void main(String[] args) throws MomsPersistenceException {
@@ -27,45 +27,45 @@ public class MomsKitchenDB {
         System.out.println("'holi'");
     }
 
-    public void realizaConexion() throws MomsPersistenceException{
+    public void realizaConexion() throws MomsPersistenceException {
 
-        try {            
-            c = DriverManager.getConnection(urlDatabase,  usuarioDb, passwordDb);
-            //System.out.println("La conexion se realizo sin problemas!");
+        try {
+            c = DriverManager.getConnection(urlDatabase, usuarioDb, passwordDb);
+            // System.out.println("La conexion se realizo sin problemas!");
         } catch (SQLException ex) {
             Logger.getLogger(MomsKitchenDB.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }
 
-    public void insertarUsuario(User user){
-        //Recupera conexion y crea Statement para el db
-        User usr = user;
-        Statement stmt = null;
-        
-        //Valida si existe una conexion abierta al db y si no trata de abrir una
-        if(c == null){
+    public boolean insertarUsuario(User user) throws MomsPersistenceException {
+        System.out.println(user);
+        PreparedStatement pstmt = null;
+        PreparedStatement pstmt2 = null;
+        boolean res = false;
+        String SQLcount = "SELECT count(distinct id) FROM public.\"user\"";
 
-            try {
-                c = DriverManager.getConnection(urlDatabase,usuarioDb, passwordDb);
-            } catch (Exception ex) {
-                Logger.getLogger(MomsKitchenDB.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            if (c == null || c.isClosed()) {
+                realizaConexion();
             }
-        }
-
-        try{
-            Class.forName("org.postgresql.Driver");
-            c.setAutoCommit(false);
-            stmt = c.createStatement();
-            //SQL de ejemplo mientras se define lo que se va a ingresar a la base de datos
-            String sql = "INSERT INTO user (nombre,apellido,correo,contraseña,saldo,numerocedula) "
-               +"VALUES ('"+usr.getName()+"','"+usr.getEmail()+"','"+usr.getPassword()+","+usr.getId()+");";
-            stmt.executeUpdate(sql);
-            stmt.close();
-            c.commit();
-            //c.close();
-        }catch(Exception ex){
+            pstmt2 = c.prepareStatement(SQLcount, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pstmt2.executeQuery();
+            rs.next();
+            int userid = rs.getInt("count") + 1;
+            String sql = "INSERT INTO public.\"user\" (id,name,address,email,phone,chef,rating,profilepicture,password,idrole)"
+                    + "VALUES ('" + userid + "','" + user.getName() + "','" + user.getAddress() + "','" + user.getEmail() + "','" 
+                    + user.getPhone() + "','"
+                    + user.isIschef() + "','" + user.getRating() + "','" + user.getProfilePicture() + "','" + user.getPassword() + "','" 
+                    + user.getRole() +"');";
+            pstmt = c.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            pstmt.execute();
+            pstmt.close();           
+            res = true;
+            // c.close();
+        } catch (SQLException ex) {
             Logger.getLogger(MomsKitchenDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return res;
     }
 
     public User authentication(String email, String password) throws MomsPersistenceException {
@@ -73,16 +73,19 @@ public class MomsKitchenDB {
 
         User user = new User();
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setString(1, email);
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            if(rs.absolute(1)){
-                user = new User(rs.getInt("id"),rs.getString("name"),rs.getString("address"),rs.getString("email"),rs.getBigDecimal("phone"), rs.getBoolean("chef"),rs.getFloat("rating"),rs.getByte("profilePicture"),rs.getString("password"));
+            if (rs.absolute(1)) {
+                user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("address"), rs.getString("email"),
+                        rs.getBigDecimal("phone"), rs.getBoolean("chef"), rs.getFloat("rating"),
+                        rs.getByte("profilePicture"), rs.getString("password"));
                 /* c.close(); */
                 pstmt.close();
                 rs.close();
@@ -101,24 +104,24 @@ public class MomsKitchenDB {
         PreparedStatement pstmt2 = null;
         String SQLcount = "SELECT count(distinct id) FROM public.\"menu\"";
         System.out.println(SQLcount);
-        
 
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            pstmt2 = c.prepareStatement(SQLcount,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt2 = c.prepareStatement(SQLcount, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet mnid = pstmt2.executeQuery();
             mnid.next();
-            int idmn = mnid.getInt("count")+1;
-            for (int i = 1; i < meals.size()+1; i++){
+            int idmn = mnid.getInt("count") + 1;
+            for (int i = 1; i < meals.size() + 1; i++) {
 
                 String SQL = "INSERT INTO public.\"menu\" (id,\"NumberLine\",\"idMeal\",\"idUser\",prices,description,\"name\") "
-                +"VALUES ('"+idmn+"','"+i+"','"+meals.get(i-1).getId()+"','"+mn.getChef().getId()+"','"+mn.getPrice()+"','"+mn.getDescription()+"','"+mn.getName()+"');";
-                pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+                        + "VALUES ('" + idmn + "','" + i + "','" + meals.get(i - 1).getId() + "','"
+                        + mn.getChef().getId() + "','" + mn.getPrice() + "','" + mn.getDescription() + "','"
+                        + mn.getName() + "');";
+                pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
                 b = pstmt.execute();
                 b = true;
-
             }
             /* c.close(); */
             pstmt.close();
@@ -128,33 +131,34 @@ public class MomsKitchenDB {
         return b;
     }
 
-    public Menu getMenu(int idMenu) throws MomsPersistenceException{
+    public Menu getMenu(int idMenu) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"menu\" WHERE id = ? ";
         Menu mn = null;
         User chef = null;
         List<Meal> meals = new ArrayList<Meal>();
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idMenu);
             ResultSet rs = pstmt.executeQuery();
             int idMeal;
             rs.next();
-            if(rs.absolute(1)){
+            if (rs.absolute(1)) {
                 chef = getUser(rs.getInt("idUser"));
-                mn = new Menu(rs.getInt("id"),chef,rs.getBigDecimal("prices"));
+                mn = new Menu(rs.getInt("id"), chef, rs.getBigDecimal("prices"));
                 mn.setDescription(rs.getString("description"));
                 mn.setName(rs.getString("name"));
                 idMeal = rs.getInt("idMeal");
                 meals.add(getMeal(idMeal));
-                while(rs.next()){
+                while (rs.next()) {
                     idMeal = rs.getInt("idMeal");
                     meals.add(getMeal(idMeal));
                 }
                 mn.setMeals(meals);
-                
+
                 /* c.close(); */
                 pstmt.close();
                 rs.close();
@@ -165,27 +169,28 @@ public class MomsKitchenDB {
         return mn;
     }
 
-    public List<Menu> getUserMenu(int idUser) throws MomsPersistenceException{
+    public List<Menu> getUserMenu(int idUser) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"menu\" WHERE \"idUser\" = ? ";
         List<Menu> mns = new ArrayList<Menu>();
         int idMenuCreate;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idUser);
             ResultSet rs = pstmt.executeQuery();
             int idMenu;
             rs.next();
-            if(rs.absolute(1)){
+            if (rs.absolute(1)) {
                 mns = new ArrayList<Menu>();
                 idMenu = rs.getInt("id");
                 mns.add(getMenu(idMenu));
                 idMenuCreate = idMenu;
-                while(rs.next()){
+                while (rs.next()) {
                     idMenu = rs.getInt("id");
-                    if(idMenu != idMenuCreate){
+                    if (idMenu != idMenuCreate) {
                         mns.add(getMenu(idMenu));
                         idMenuCreate = idMenu;
                     }
@@ -200,27 +205,28 @@ public class MomsKitchenDB {
         return mns;
     }
 
-    public List<Menu> getMenus() throws MomsPersistenceException{
+    public List<Menu> getMenus() throws MomsPersistenceException {
         System.out.println("Querying...");
         String SQL = "SELECT * FROM public.\"menu\" ";
         List<Menu> mns = new ArrayList<Menu>();
         int idMenuCreate;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = pstmt.executeQuery();
             int idMenu;
             rs.next();
-            if(rs.absolute(1)){
+            if (rs.absolute(1)) {
                 mns = new ArrayList<Menu>();
                 idMenu = rs.getInt("id");
                 mns.add(getMenu(idMenu));
                 idMenuCreate = idMenu;
-                while(rs.next()){
+                while (rs.next()) {
                     idMenu = rs.getInt("id");
-                    if(idMenu != idMenuCreate){
+                    if (idMenu != idMenuCreate) {
                         mns.add(getMenu(idMenu));
                         idMenuCreate = idMenu;
                     }
@@ -236,26 +242,27 @@ public class MomsKitchenDB {
         return mns;
     }
 
-    public List<Meal> getMeals() throws MomsPersistenceException{
+    public List<Meal> getMeals() throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"meal\" ";
         List<Meal> mns = new ArrayList<Meal>();
         int idMealCreate;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = pstmt.executeQuery();
             int idMeal;
             rs.next();
-            if(rs.absolute(1)){
+            if (rs.absolute(1)) {
                 mns = new ArrayList<Meal>();
                 idMeal = rs.getInt("id");
                 mns.add(getMeal(idMeal));
                 idMealCreate = idMeal;
-                while(rs.next()){
+                while (rs.next()) {
                     idMeal = rs.getInt("id");
-                    if(idMeal != idMealCreate){
+                    if (idMeal != idMealCreate) {
                         mns.add(getMeal(idMeal));
                         idMealCreate = idMeal;
                     }
@@ -275,15 +282,17 @@ public class MomsKitchenDB {
 
         Meal meal = null;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idMeal);
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            if(rs.absolute(1)){
-                meal = new Meal(rs.getInt("id"),rs.getString("name"),rs.getBigDecimal("price"),rs.getString("description"));
+            if (rs.absolute(1)) {
+                meal = new Meal(rs.getInt("id"), rs.getString("name"), rs.getBigDecimal("price"),
+                        rs.getString("description"));
                 /* c.close(); */
                 pstmt.close();
                 rs.close();
@@ -295,24 +304,27 @@ public class MomsKitchenDB {
     }
 
     public List<Meal> getMealsByName(String mealname) throws MomsPersistenceException {
-        String SQL = "SELECT * FROM public.\"meal\" WHERE name ILIKE '%"+ mealname +"%'";
+        String SQL = "SELECT * FROM public.\"meal\" WHERE name ILIKE '%" + mealname + "%'";
 
         Meal meal = null;
         List<Meal> meals = new ArrayList<Meal>();
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);            
-            ResultSet rs = pstmt.executeQuery();  
-            rs.next();          
-            if(rs.absolute(1)){
-                meal = new Meal(rs.getInt("id"),rs.getString("name"),rs.getBigDecimal("price"),rs.getString("description"));
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            if (rs.absolute(1)) {
+                meal = new Meal(rs.getInt("id"), rs.getString("name"), rs.getBigDecimal("price"),
+                        rs.getString("description"));
                 meals.add(meal);
-                while(rs.next()){
-                    meal = new Meal(rs.getInt("id"),rs.getString("name"),rs.getBigDecimal("price"),rs.getString("description"));
+                while (rs.next()) {
+                    meal = new Meal(rs.getInt("id"), rs.getString("name"), rs.getBigDecimal("price"),
+                            rs.getString("description"));
                     meals.add(meal);
-                }                
+                }
                 /* c.close(); */
                 pstmt.close();
                 rs.close();
@@ -330,24 +342,22 @@ public class MomsKitchenDB {
         PreparedStatement pstmt2 = null;
         String SQLcount = "SELECT count(distinct id) FROM public.\"meal\"";
         System.out.println(SQLcount);
-        
 
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            pstmt2 = c.prepareStatement(SQLcount,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt2 = c.prepareStatement(SQLcount, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet mnid = pstmt2.executeQuery();
             mnid.next();
-            int idmn = mnid.getInt("count")+1;
+            int idmn = mnid.getInt("count") + 1;
 
-            String SQL = "INSERT INTO public.\"meal\" (id,name,price,description) "
-            +"VALUES ('"+idmn+"','"+me.getName()+"','"+me.getPrice()+"','"+me.getDescription()+"');";
-            pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            String SQL = "INSERT INTO public.\"meal\" (id,name,price,description) " + "VALUES ('" + idmn + "','"
+                    + me.getName() + "','" + me.getPrice() + "','" + me.getDescription() + "');";
+            pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             b = pstmt.execute();
             b = true;
 
-            
             /* c.close(); */
             pstmt.close();
         } catch (SQLException e) {
@@ -362,22 +372,23 @@ public class MomsKitchenDB {
         List<Order> ods = new ArrayList<Order>();
         int idOrderCreate;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idcustomer);
             ResultSet rs = pstmt.executeQuery();
             int idOrder;
             rs.next();
-            if(rs.absolute(1)){
+            if (rs.absolute(1)) {
                 ods = new ArrayList<Order>();
                 idOrder = rs.getInt("id");
                 ods.add(getOrder(idOrder));
                 idOrderCreate = idOrder;
-                while(rs.next()){
+                while (rs.next()) {
                     idOrder = rs.getInt("id");
-                    if(idOrder != idOrderCreate){
+                    if (idOrder != idOrderCreate) {
                         ods.add(getOrder(idOrder));
                         idOrderCreate = idOrder;
                     }
@@ -398,22 +409,23 @@ public class MomsKitchenDB {
         List<Order> ods = new ArrayList<Order>();
         int idOrderCreate;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idchef);
             ResultSet rs = pstmt.executeQuery();
             int idOrder;
             rs.next();
-            if(rs.absolute(1)){
+            if (rs.absolute(1)) {
                 ods = new ArrayList<Order>();
                 idOrder = rs.getInt("id");
                 ods.add(getOrder(idOrder));
                 idOrderCreate = idOrder;
-                while(rs.next()){
+                while (rs.next()) {
                     idOrder = rs.getInt("id");
-                    if(idOrder != idOrderCreate){
+                    if (idOrder != idOrderCreate) {
                         ods.add(getOrder(idOrder));
                         idOrderCreate = idOrder;
                     }
@@ -426,7 +438,7 @@ public class MomsKitchenDB {
             e.printStackTrace();
         }
         return ods;
-    }    
+    }
 
     public Order getOrder(int idOrder) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"order\" WHERE id = ? ";
@@ -435,23 +447,25 @@ public class MomsKitchenDB {
         User chef = null;
         List<Menu> menus = new ArrayList<Menu>();
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idOrder);
             ResultSet rs = pstmt.executeQuery();
             int idMenu;
             BigDecimal tp = null;
             rs.next();
-            if(rs.absolute(1)){
+            if (rs.absolute(1)) {
                 customer = getUser(rs.getInt("idCustomer"));
                 chef = getUser(rs.getInt("idChef"));
-                od = new Order(rs.getInt("id"),rs.getDate("date"),rs.getString("description"),customer,chef,rs.getBoolean("pendingpayment"));
-                tp  = new BigDecimal(rs.getInt("totalPrice"));
+                od = new Order(rs.getInt("id"), rs.getDate("date"), rs.getString("description"), customer, chef,
+                        rs.getBoolean("pendingpayment"));
+                tp = new BigDecimal(rs.getInt("totalPrice"));
                 idMenu = rs.getInt("idMenu");
                 menus.add(getMenu(idMenu));
-                while(rs.next()){
+                while (rs.next()) {
                     idMenu = rs.getInt("idMenu");
                     menus.add(getMenu(idMenu));
                 }
@@ -467,26 +481,27 @@ public class MomsKitchenDB {
         return od;
     }
 
-    public List<Order> getOrders() throws MomsPersistenceException{
+    public List<Order> getOrders() throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"order\" ";
         List<Order> ods = new ArrayList<Order>();
         int idOrderCreate;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = pstmt.executeQuery();
             int idOrder;
             rs.next();
-            if(rs.absolute(1)){
+            if (rs.absolute(1)) {
                 ods = new ArrayList<Order>();
                 idOrder = rs.getInt("id");
                 ods.add(getOrder(idOrder));
                 idOrderCreate = idOrder;
-                while(rs.next()){
+                while (rs.next()) {
                     idOrder = rs.getInt("id");
-                    if(idOrder != idOrderCreate){
+                    if (idOrder != idOrderCreate) {
                         ods.add(getOrder(idOrder));
                         idOrderCreate = idOrder;
                     }
@@ -501,28 +516,28 @@ public class MomsKitchenDB {
         return ods;
     }
 
-
     public List<Order> getCustomerOrders(int idCustomer) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"order\" WHERE \"idCustomer\" = ? ";
         List<Order> ods = new ArrayList<Order>();
         int idOrderCreate;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idCustomer);
             ResultSet rs = pstmt.executeQuery();
             int idOrder;
             rs.next();
-            if(rs.absolute(1)){
+            if (rs.absolute(1)) {
                 ods = new ArrayList<Order>();
                 idOrder = rs.getInt("id");
                 ods.add(getOrder(idOrder));
                 idOrderCreate = idOrder;
-                while(rs.next()){
+                while (rs.next()) {
                     idOrder = rs.getInt("id");
-                    if(idOrder != idOrderCreate){
+                    if (idOrder != idOrderCreate) {
                         ods.add(getOrder(idOrder));
                         idOrderCreate = idOrder;
                     }
@@ -535,7 +550,7 @@ public class MomsKitchenDB {
             e.printStackTrace();
         }
         return ods;
-        
+
     }
 
     public Boolean createOrder(Order order) throws MomsPersistenceException {
@@ -546,22 +561,24 @@ public class MomsKitchenDB {
         PreparedStatement pstmt2 = null;
         String SQLcount = "SELECT count(distinct id) FROM public.\"order\"";
         System.out.println(SQLcount);
-        
 
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            pstmt2 = c.prepareStatement(SQLcount,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmt2 = c.prepareStatement(SQLcount, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet mnid = pstmt2.executeQuery();
             mnid.next();
-            int idmn = mnid.getInt("count")+1;
-            for (int i = 1; i < menus.size()+1; i++){
+            int idmn = mnid.getInt("count") + 1;
+            for (int i = 1; i < menus.size() + 1; i++) {
 
                 String SQL = "INSERT INTO public.\"order\" (id,\"numLine\", description, date, \"idMenu\", \"idCustomer\", \"totalPrice\", \"idChef\", \"pendingpayment\")"
-                +"VALUES ('"+idmn+"','"+i+"','"+or.getDescription()+"','"+or.getOrderDate()+"','"+menus.get(i-1).getId()+"','"+or.getCustomer().getId()+"','"+menus.get(i-1).getPrice()+"','"+or.getChef().getId()+"','"+or.isPendingPayment()+"');";
+                        + "VALUES ('" + idmn + "','" + i + "','" + or.getDescription() + "','" + or.getOrderDate()
+                        + "','" + menus.get(i - 1).getId() + "','" + or.getCustomer().getId() + "','"
+                        + menus.get(i - 1).getPrice() + "','" + or.getChef().getId() + "','" + or.isPendingPayment()
+                        + "');";
 
-                pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+                pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
                 b = pstmt.execute();
                 b = true;
 
@@ -574,22 +591,23 @@ public class MomsKitchenDB {
         return b;
     }
 
-
-
     public User getUser(int idUser) throws MomsPersistenceException {
         String SQL = "SELECT * FROM public.\"user\" WHERE id = ? ";
 
         User user = null;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setInt(1, idUser);
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            if(rs.absolute(1)){
-                user = new User(rs.getInt("id"), rs.getString("name"),rs.getString("address"),rs.getString("email"),rs.getBigDecimal("phone"),rs.getBoolean("chef"),rs.getFloat("rating"),rs.getByte("profilePicture"),rs.getString("password"),rs.getInt("idrole"));
+            if (rs.absolute(1)) {
+                user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("address"), rs.getString("email"),
+                        rs.getBigDecimal("phone"), rs.getBoolean("chef"), rs.getFloat("rating"),
+                        rs.getByte("profilePicture"), rs.getString("password"), rs.getInt("idrole"));
                 /* c.close(); */
                 pstmt.close();
                 rs.close();
@@ -605,15 +623,18 @@ public class MomsKitchenDB {
 
         User user = null;
         try {
-            if(c == null || c.isClosed()){
+            if (c == null || c.isClosed()) {
                 realizaConexion();
             }
-            PreparedStatement pstmt = c.prepareStatement(SQL,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pstmt = c.prepareStatement(SQL, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             pstmt.setString(1, email);
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            if(rs.absolute(1)){
-                user = new User(rs.getInt("id"), rs.getString("name"),rs.getString("address"),rs.getString("email"),rs.getBigDecimal("phone"),rs.getBoolean("chef"),rs.getFloat("rating"),rs.getByte("profilePicture"),rs.getString("password"),rs.getInt("idrole"));
+            if (rs.absolute(1)) {
+                user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("address"), rs.getString("email"),
+                        rs.getBigDecimal("phone"), rs.getBoolean("chef"), rs.getFloat("rating"),
+                        rs.getByte("profilePicture"), rs.getString("password"), rs.getInt("idrole"));
                 /* c.close(); */
                 pstmt.close();
                 rs.close();

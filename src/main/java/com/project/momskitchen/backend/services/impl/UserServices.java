@@ -3,6 +3,7 @@ package com.project.momskitchen.backend.services.impl;
 import java.util.ArrayList;
 
 import com.project.momskitchen.backend.dao.impl.UserDAOImpl;
+import com.project.momskitchen.backend.exceptions.MomsPersistenceException;
 import com.project.momskitchen.backend.model.User;
 import com.project.momskitchen.backend.services.Services;
 
@@ -13,12 +14,16 @@ public class UserServices implements Services {
 
     UserDAOImpl udi = new UserDAOImpl();
 
-    public User authenticateUser(String email, String password){         
+    public User authenticateUser(String email, String password) {
         return udi.readUser(email, password);
     }
 
-    public User validateAuth(String email){         
+    public User validateAuth(String email) {
         return udi.readUser(email);
+    }
+
+    public boolean addUser(User user) throws MomsPersistenceException {
+        return udi.addUser(user);
     }
 
     @Override
